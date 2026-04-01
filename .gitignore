@@ -1,0 +1,24 @@
+# 环境变量
+.env
+
+# Python 缓存
+*.pyc
+__pycache__/
+
+# 日志
+*.log
+
+# IDE
+.vscode/
+.idea/
+
+# 向量数据库文件（不需要公开）
+*.index
+faiss_index/
+
+# PDF 简历文件（文件较大，可选）
+*.pdf
+
+# 临时文件
+*.tmp
+.DS_Store

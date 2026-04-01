@@ -1,0 +1,474 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>项目实战 | 李涛</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Noto+Sans+SC:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+  <link rel="stylesheet" href="./styles.css" />
+  <link rel="stylesheet" href="./projects.css" />
+</head>
+<body data-page="projects">
+  <!-- 滚动进度条 -->
+  <div class="scroll-progress" id="scroll-progress"></div>
+
+  <div id="canvas-container" aria-hidden="true"></div>
+
+  <header class="glass-nav">
+    <a class="brand" href="./index.html">
+      <span class="brand-logo">LT</span>
+      <span class="brand-tag">AI Engineer</span>
+    </a>
+    <nav class="nav-dots">
+      <a href="./index.html" class="nav-dot" title="首页" data-i18n="nav-home">首页</a>
+      <a href="./projects.html" class="nav-dot active" title="项目" data-i18n="nav-projects">项目</a>
+      <a href="./curriculum.html" class="nav-dot" title="课程" data-i18n="nav-curriculum">课程</a>
+      <a href="./knowledge-map.html" class="nav-dot" title="图谱" data-i18n="nav-knowledge">图谱</a>
+    </nav>
+    <div class="controls-container">
+      <button class="theme-toggle" id="theme-toggle" aria-label="切换主题">
+        <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="5"/>
+          <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+        </svg>
+        <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+        </svg>
+      </button>
+      <button class="lang-toggle" id="lang-toggle" aria-label="切换语言">
+        <span class="lang-label">EN</span>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <section class="page-hero reveal-on-scroll">
+      <div class="hero-badge glow">Projects</div>
+      <h1 data-i18n="projects-page-title">项目实战与工程化能力</h1>
+      <p class="hero-subtitle" data-i18n="projects-page-subtitle">
+        每个项目都突出：<strong>问题定义 → 技术方案 → 关键优化 → 可量化结果</strong>
+      </p>
+    </section>
+
+    <!-- 旗舰项目 -->
+    <section class="project-detail reveal-on-scroll">
+      <div class="project-header">
+        <div class="project-tags">
+          <span class="tag featured" data-i18n="project-featured-tag">旗舰项目</span>
+          <span class="tag">Hybrid RAG</span>
+          <span class="tag" data-i18n="tag-production">生产级</span>
+        </div>
+        <h2 data-i18n="project-1-title">智能检索增强生成系统</h2>
+      </div>
+      
+      <div class="project-grid">
+        <div class="project-main">
+          <div class="architecture-diagram">
+            <h3 data-i18n="diagram-system-arch">系统架构</h3>
+            <div class="diagram">
+              <div class="diagram-row">
+                <div class="diagram-box input">
+                  <span>📄</span>
+                  <strong data-i18n="diagram-input">输入</strong>
+                  <small data-i18n="diagram-input-docs">PDF/TXT/Excel</small>
+                </div>
+                <div class="diagram-arrow">→</div>
+                <div class="diagram-box process">
+                  <span>🔄</span>
+                  <strong data-i18n="diagram-parse">文档解析</strong>
+                  <small data-i18n="diagram-parse-desc">统一处理</small>
+                </div>
+              </div>
+              <div class="diagram-row">
+                <div class="diagram-box process">
+                  <span>🔍</span>
+                  <strong data-i18n="diagram-retrieve">多路召回</strong>
+                  <small data-i18n="diagram-retrieve-desc">BM25 + 向量 + 规则</small>
+                </div>
+                <div class="diagram-arrow">→</div>
+                <div class="diagram-box process">
+                  <span>📊</span>
+                  <strong>Rerank</strong>
+                  <small data-i18n="diagram-rerank-desc">BGE-Reranker</small>
+                </div>
+              </div>
+              <div class="diagram-row">
+                <div class="diagram-box process">
+                  <span>🛡️</span>
+                  <strong data-i18n="diagram-safety">安全护栏</strong>
+                  <small data-i18n="diagram-safety-desc">注入检测/敏感词</small>
+                </div>
+                <div class="diagram-arrow">→</div>
+                <div class="diagram-box output">
+                  <span>✨</span>
+                  <strong data-i18n="diagram-generate">生成</strong>
+                  <small data-i18n="diagram-generate-desc">Prompt 模板化</small>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="project-content">
+            <h3 data-i18n="section-tech-solution">技术方案</h3>
+            <ul class="tech-list">
+              <li>
+                <span class="tech-icon">📦</span>
+                <div>
+                  <strong data-i18n="tech-parse-layer">文档解析层</strong>
+                  <p data-i18n="tech-parse-layer-desc">PDF / TXT / Excel 多源数据统一处理，支持大文件分块流式处理</p>
+                </div>
+              </li>
+              <li>
+                <span class="tech-icon">🔍</span>
+                <div>
+                  <strong data-i18n="tech-retrieve-layer">检索层</strong>
+                  <p data-i18n="tech-retrieve-layer-desc">BM25 关键词检索 + Chroma/FAISS 向量检索 + 正则规则检索，三路召回</p>
+                </div>
+              </li>
+              <li>
+                <span class="tech-icon">📈</span>
+                <div>
+                  <strong data-i18n="tech-sort-layer">排序层</strong>
+                  <p data-i18n="tech-sort-layer-desc">Rerank 精细排序 + 置信度判定 + 上下文压缩，只保留关键信息</p>
+                </div>
+              </li>
+              <li>
+                <span class="tech-icon">🛡️</span>
+                <div>
+                  <strong data-i18n="tech-safety-layer">安全层</strong>
+                  <p data-i18n="tech-safety-layer-desc">提示注入检测、敏感词过滤、越权限制、低置信度降级</p>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+        
+        <div class="project-sidebar">
+          <div class="metrics-card">
+            <h3 data-i18n="card-performance">性能指标</h3>
+            <div class="metrics-list">
+              <div class="metric-item">
+                <div class="metric-icon">🎯</div>
+                <div class="metric-info">
+                  <span class="metric-value">47%</span>
+                  <span class="metric-label" data-i18n="metric-accuracy">检索准确率提升</span>
+                </div>
+              </div>
+              <div class="metric-item">
+                <div class="metric-icon">⚡</div>
+                <div class="metric-info">
+                  <span class="metric-value">&lt;800ms</span>
+                  <span class="metric-label" data-i18n="metric-latency">P95 延迟</span>
+                </div>
+              </div>
+              <div class="metric-item">
+                <div class="metric-icon">📈</div>
+                <div class="metric-info">
+                  <span class="metric-value">99.2%</span>
+                  <span class="metric-label" data-i18n="metric-availability">系统可用性</span>
+                </div>
+              </div>
+              <div class="metric-item">
+                <div class="metric-icon">💾</div>
+                <div class="metric-info">
+                  <span class="metric-value">10W+</span>
+                  <span class="metric-label" data-i18n="metric-docs">文档处理量</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="tech-stack-card">
+            <h3 data-i18n="card-tech-stack">技术栈</h3>
+            <div class="stack-tags">
+              <span class="stack-tag">Python</span>
+              <span class="stack-tag">LangChain</span>
+              <span class="stack-tag">Chroma</span>
+              <span class="stack-tag">FAISS</span>
+              <span class="stack-tag">BGE-M3</span>
+              <span class="stack-tag">BGE-Reranker</span>
+              <span class="stack-tag">FastAPI</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 关键优化 -->
+    <section class="section reveal-on-scroll">
+      <div class="section-header">
+        <h2 data-i18n="optimization-title">关键优化点</h2>
+        <p class="section-desc" data-i18n="optimization-desc">解决实际工程问题的具体方案</p>
+      </div>
+
+      <div class="optimization-grid">
+        <article class="opt-card">
+          <div class="opt-icon">🚀</div>
+          <h3 data-i18n="opt-1-title">Embedding 批处理优化</h3>
+          <p data-i18n="opt-1-desc">解决长任务卡死问题</p>
+          <div class="opt-detail">
+            <pre><code># 批处理 + 超时控制 + 指数退避
+for batch in chunks(batch_size=64):
+    retry_with_backoff(
+        embed_batch,
+        max_retries=3,
+        timeout=5.0
+    )</code></pre>
+            <div class="opt-result">
+              <span class="result-label" data-i18n="result-label">结果：</span>
+              <span class="result-value" data-i18n="opt-1-result">超时率从 12% → 0.3%</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="opt-card">
+          <div class="opt-icon">🔒</div>
+          <h3 data-i18n="opt-2-title">正则匹配 + 规则分析</h3>
+          <p data-i18n="opt-2-desc">输入输出安全防护</p>
+          <div class="opt-detail">
+            <pre><code># 提示注入检测
+INJECTION_PATTERNS = [
+    r"ignore previous instructions",
+    r"you are now in debug mode",
+    r"output your system prompt"
+]
+
+def detect_injection(query):
+    return any(re.search(p, query.lower())
+               for p in INJECTION_PATTERNS)</code></pre>
+            <div class="opt-result">
+              <span class="result-label" data-i18n="result-label">结果：</span>
+              <span class="result-value" data-i18n="opt-2-result">拦截 99.7% 注入尝试</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="opt-card">
+          <div class="opt-icon">🔄</div>
+          <h3 data-i18n="opt-3-title">Query Rewrite</h3>
+          <p data-i18n="opt-3-desc">模糊问题改写提升召回</p>
+          <div class="opt-detail">
+            <pre><code># 问题改写示例
+原问题："那个啥，就是上次说的缓存"
+改写后："Redis 缓存的实现方法和最佳实践"
+
+# 使用 LLM 进行语义改写
+rewritten = llm.rewrite(
+    query,
+    style="technical precise"
+)</code></pre>
+            <div class="opt-result">
+              <span class="result-label" data-i18n="result-label">结果：</span>
+              <span class="result-value" data-i18n="opt-3-result">召回相关性 +35%</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="opt-card">
+          <div class="opt-icon">🎯</div>
+          <h3 data-i18n="opt-4-title">多路召回权重融合</h3>
+          <p data-i18n="opt-4-desc">RRF 倒数排名融合</p>
+          <div class="opt-detail">
+            <pre><code># RRF 融合公式
+score(d) = 1/(k+rank_bm25) + 1/(k+rank_dense)
+
+# 权重配置
+WEIGHTS = {
+    "bm25": 0.3,
+    "dense": 0.5,
+    "rule": 0.2
+}</code></pre>
+            <div class="opt-result">
+              <span class="result-label" data-i18n="result-label">结果：</span>
+              <span class="result-value" data-i18n="opt-4-result">复杂问题覆盖率 +28%</span>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- Agent 项目 -->
+    <section class="project-detail reveal-on-scroll">
+      <div class="project-header">
+        <div class="project-tags">
+          <span class="tag">Agent</span>
+          <span class="tag">ReAct</span>
+          <span class="tag" data-i18n="tag-workflow">工作流</span>
+        </div>
+        <h2 data-i18n="project-2-title">ReAct 智能体工作流引擎</h2>
+      </div>
+
+      <div class="project-grid">
+        <div class="project-main">
+          <div class="project-content">
+            <h3 data-i18n="project-2-core-design">核心设计</h3>
+            <ul class="tech-list">
+              <li>
+                <span class="tech-icon">🧠</span>
+                <div>
+                  <strong data-i18n="agent-reason-act">Reason-Act 循环</strong>
+                  <p data-i18n="agent-reason-act-desc">先推理再调用工具，避免盲目生成。每次迭代记录思考轨迹。</p>
+                </div>
+              </li>
+              <li>
+                <span class="tech-icon">👥</span>
+                <div>
+                  <strong data-i18n="agent-roles">角色分工</strong>
+                  <p data-i18n="agent-roles-desc">Planner（任务拆解）→ Retriever（检索）→ ToolRunner（执行）→ Reporter（整合）</p>
+                </div>
+              </li>
+              <li>
+                <span class="tech-icon">🔧</span>
+                <div>
+                  <strong data-i18n="agent-tools">工具接入</strong>
+                  <p data-i18n="agent-tools-desc">检索工具、计算工具、规则引擎、知识库查询，支持动态注册</p>
+                </div>
+              </li>
+              <li>
+                <span class="tech-icon">🔙</span>
+                <div>
+                  <strong data-i18n="agent-recovery">失败恢复</strong>
+                  <p data-i18n="agent-recovery-desc">步骤回退、自动重试、降级回答策略，保证系统鲁棒性</p>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="project-sidebar">
+          <div class="metrics-card">
+            <h3 data-i18n="project-2-results">执行效果</h3>
+            <div class="metrics-list">
+              <div class="metric-item">
+                <div class="metric-icon">✅</div>
+                <div class="metric-info">
+                  <span class="metric-value">92%</span>
+                  <span class="metric-label" data-i18n="agent-completion-rate">任务完成率</span>
+                </div>
+              </div>
+              <div class="metric-item">
+                <div class="metric-icon">🔄</div>
+                <div class="metric-info">
+                  <span class="metric-value">3.2</span>
+                  <span class="metric-label" data-i18n="agent-iterations">平均迭代次数</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="tech-stack-card">
+            <h3 data-i18n="card-tech-stack">技术栈</h3>
+            <div class="stack-tags">
+              <span class="stack-tag">LangChain</span>
+              <span class="stack-tag">ReAct</span>
+              <span class="stack-tag">Tool Calling</span>
+              <span class="stack-tag">State Machine</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 本地模型项目 -->
+    <section class="project-detail reveal-on-scroll">
+      <div class="project-header">
+        <div class="project-tags">
+          <span class="tag">Local LLM</span>
+          <span class="tag">LoRA</span>
+          <span class="tag">PEFT</span>
+        </div>
+        <h2 data-i18n="project-3-title">Qwen-3.8B 本地部署与微调</h2>
+      </div>
+
+      <div class="project-grid">
+        <div class="project-main">
+          <div class="project-content">
+            <h3 data-i18n="project-3-implementation">实施路径</h3>
+            <ul class="tech-list">
+              <li>
+                <span class="tech-icon">💻</span>
+                <div>
+                  <strong data-i18n="llm-inference">本地推理配置</strong>
+                  <p data-i18n="llm-inference-desc">vLLM 推理引擎，4-bit 量化，上下文窗口 8K，单卡 24GB 显存可运行</p>
+                </div>
+              </li>
+              <li>
+                <span class="tech-icon">🎛️</span>
+                <div>
+                  <strong data-i18n="llm-params">推理参数优化</strong>
+                  <p data-i18n="llm-params-desc">temperature=0.7, top_p=0.9, repetition_penalty=1.1，平衡创造性与稳定性</p>
+                </div>
+              </li>
+              <li>
+                <span class="tech-icon">🔧</span>
+                <div>
+                  <strong data-i18n="llm-lora">LoRA / PEFT 微调</strong>
+                  <p data-i18n="llm-lora-desc">参数高效微调，仅训练 0.1% 参数，注入领域知识，成本降低 90%</p>
+                </div>
+              </li>
+              <li>
+                <span class="tech-icon">📊</span>
+                <div>
+                  <strong data-i18n="llm-comparison">性能对比</strong>
+                  <p data-i18n="llm-comparison-desc">对比云端 API：成本 -83%，延迟 -40%，可控性 +100%</p>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="project-sidebar">
+          <div class="metrics-card">
+            <h3 data-i18n="project-3-metrics">性能对比</h3>
+            <div class="metrics-list">
+              <div class="metric-item">
+                <div class="metric-icon">💰</div>
+                <div class="metric-info">
+                  <span class="metric-value">-83%</span>
+                  <span class="metric-label" data-i18n="llm-cost">成本降低</span>
+                </div>
+              </div>
+              <div class="metric-item">
+                <div class="metric-icon">⚡</div>
+                <div class="metric-info">
+                  <span class="metric-value">-40%</span>
+                  <span class="metric-label" data-i18n="llm-latency">延迟降低</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="tech-stack-card">
+            <h3 data-i18n="card-tech-stack">技术栈</h3>
+            <div class="stack-tags">
+              <span class="stack-tag">Qwen-3.8B</span>
+              <span class="stack-tag">vLLM</span>
+              <span class="stack-tag">LoRA</span>
+              <span class="stack-tag">PEFT</span>
+              <span class="stack-tag">GGUF</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-left">
+        <span class="footer-brand">LT</span>
+        <p>© 2026 <span data-i18n="footer-name">李涛</span> · <span data-i18n="footer-projects">项目详情</span></p>
+      </div>
+      <div class="footer-links">
+        <a href="mailto:lit82266@gmail.com">lit82266@gmail.com</a>
+        <a href="tel:17835415300">17835415300</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="./script.js"></script>
+</body>
+</html>

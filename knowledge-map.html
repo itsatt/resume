@@ -1,0 +1,353 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>知识图谱 | 李涛</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Noto+Sans+SC:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <link rel="stylesheet" href="./styles.css" />
+  <link rel="stylesheet" href="./knowledge-map.css" />
+</head>
+<body data-page="knowledge">
+  <!-- 滚动进度条 -->
+  <div class="scroll-progress" id="scroll-progress"></div>
+
+  <div id="canvas-container" aria-hidden="true"></div>
+
+  <header class="glass-nav">
+    <a class="brand" href="./index.html">
+      <span class="brand-logo">LT</span>
+      <span class="brand-tag">AI Engineer</span>
+    </a>
+    <nav class="nav-dots">
+      <a href="./index.html" class="nav-dot" title="首页" data-i18n="nav-home">首页</a>
+      <a href="./projects.html" class="nav-dot" title="项目" data-i18n="nav-projects">项目</a>
+      <a href="./curriculum.html" class="nav-dot" title="课程" data-i18n="nav-curriculum">课程</a>
+      <a href="./knowledge-map.html" class="nav-dot active" title="图谱" data-i18n="nav-knowledge">图谱</a>
+    </nav>
+    <div class="controls-container">
+      <button class="theme-toggle" id="theme-toggle" aria-label="切换主题">
+        <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="5"/>
+          <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+        </svg>
+        <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+        </svg>
+      </button>
+      <button class="lang-toggle" id="lang-toggle" aria-label="切换语言">
+        <span class="lang-label">EN</span>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <section class="page-hero reveal-on-scroll">
+      <div class="hero-badge glow">Knowledge Graph</div>
+      <h1 data-i18n="knowledge-title">LLM 工程知识图谱</h1>
+      <p class="hero-subtitle" data-i18n="knowledge-subtitle">
+        拖拽节点探索知识关联 · 点击查看详情
+      </p>
+    </section>
+
+    <!-- 交互式知识图谱 -->
+    <section class="graph-section reveal-on-scroll">
+      <div class="graph-container">
+        <div id="force-graph"></div>
+        <div class="graph-controls">
+          <button class="control-btn" id="reset-view">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+              <path d="M3 3v5h5"/>
+            </svg>
+            <span data-i18n="btn-reset-view">重置视图</span>
+          </button>
+          <button class="control-btn" id="toggle-labels">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M4 7V4h16v3M9 20h6M12 4v16"/>
+            </svg>
+            <span data-i18n="btn-toggle-labels">显示标签</span>
+          </button>
+        </div>
+      </div>
+      
+      <div class="graph-legend">
+        <div class="legend-category">
+          <span class="legend-dot" style="--color: #00f5d4"></span>
+          <span data-i18n="legend-core">核心能力</span>
+        </div>
+        <div class="legend-category">
+          <span class="legend-dot" style="--color: #00bbf9"></span>
+          <span data-i18n="legend-retrieval">检索技术</span>
+        </div>
+        <div class="legend-category">
+          <span class="legend-dot" style="--color: #9b5de5"></span>
+          <span data-i18n="legend-agent">Agent</span>
+        </div>
+        <div class="legend-category">
+          <span class="legend-dot" style="--color: #f15bb5"></span>
+          <span data-i18n="legend-deployment">模型部署</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 知识主线 -->
+    <section class="timeline-section reveal-on-scroll">
+      <div class="section-header">
+        <h2 data-i18n="knowledge-timeline-title">知识关联主线</h2>
+        <p class="section-desc" data-i18n="knowledge-timeline-desc">技术演进的逻辑链条</p>
+      </div>
+
+      <div class="knowledge-timeline">
+        <div class="timeline-item">
+          <div class="timeline-marker">
+            <span>1</span>
+          </div>
+          <div class="timeline-content">
+            <h3 data-i18n="timeline-step-1-title">Prompt → 检索</h3>
+            <p data-i18n="timeline-step-1-desc">高质量 Prompt 决定检索目标和上下文组装质量。结构化输出让后续处理更可靠。</p>
+            <div class="timeline-tags">
+              <span class="tl-tag" data-i18n="tag-prompt-eng">Prompt Engineering</span>
+              <span class="tl-tag" data-i18n="tag-structured-output">结构化输出</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-marker">
+            <span>2</span>
+          </div>
+          <div class="timeline-content">
+            <h3 data-i18n="timeline-step-2-title">检索 → Agent</h3>
+            <p data-i18n="timeline-step-2-desc">Agent 通过 ReAct 调度检索和工具执行，完成复杂任务。检索是 Agent 的"眼睛"。</p>
+            <div class="timeline-tags">
+              <span class="tl-tag" data-i18n="tag-react">ReAct</span>
+              <span class="tl-tag" data-i18n="tag-tool-calling">工具调用</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-marker">
+            <span>3</span>
+          </div>
+          <div class="timeline-content">
+            <h3 data-i18n="timeline-step-3-title">Agent → 本地模型</h3>
+            <p data-i18n="timeline-step-3-desc">把任务链迁移到本地 Qwen，兼顾隐私与可控性。减少云端依赖，降低成本。</p>
+            <div class="timeline-tags">
+              <span class="tl-tag" data-i18n="tag-qwen">Qwen-3.8B</span>
+              <span class="tl-tag" data-i18n="tag-local-deploy">本地部署</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-marker">
+            <span>4</span>
+          </div>
+          <div class="timeline-content">
+            <h3 data-i18n="timeline-step-4-title">本地模型 → 微调</h3>
+            <p data-i18n="timeline-step-4-desc">用 LoRA / PEFT 增强领域表达，再配合 RAG 保持知识新鲜。微调 + 检索双轮驱动。</p>
+            <div class="timeline-tags">
+              <span class="tl-tag" data-i18n="tag-lora">LoRA</span>
+              <span class="tl-tag" data-i18n="tag-peft">PEFT</span>
+              <span class="tl-tag" data-i18n="tag-rag">RAG</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 技能掌握度详情 -->
+    <section class="skills-detail-section reveal-on-scroll">
+      <div class="section-header">
+        <h2 data-i18n="knowledge-skills-title">技能掌握度详情</h2>
+        <p class="section-desc" data-i18n="knowledge-skills-desc">点击节点查看详细信息</p>
+      </div>
+      
+      <div class="skills-grid">
+        <div class="skill-card" data-skill="prompt">
+          <div class="skill-header">
+            <span class="skill-icon">📝</span>
+            <h3 data-i18n="skill-prompt">Prompt Engineering</h3>
+            <span class="skill-level high" data-i18n="level-high">高</span>
+          </div>
+          <div class="skill-body">
+            <p data-i18n="skill-prompt-desc">模板设计、约束输出、思维链引导、错误案例迭代</p>
+            <div class="skill-tags">
+              <span data-i18n="tag-role-context">Role/Context/Task</span>
+              <span data-i18n="tag-few-shot">Few-shot</span>
+              <span data-i18n="tag-cot">CoT</span>
+              <span data-i18n="tag-output-validation">输出校验</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="skill-card" data-skill="react">
+          <div class="skill-header">
+            <span class="skill-icon">🧠</span>
+            <h3 data-i18n="skill-react">ReAct Agent</h3>
+            <span class="skill-level medium-high" data-i18n="level-medium-high">中高</span>
+          </div>
+          <div class="skill-body">
+            <p data-i18n="skill-react-desc">Reason-Act 循环，工具调用策略与执行日志分析</p>
+            <div class="skill-tags">
+              <span data-i18n="tag-planner">Planner</span>
+              <span data-i18n="tag-tool-runner">ToolRunner</span>
+              <span data-i18n="tag-failure-recovery">失败恢复</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="skill-card" data-skill="langchain">
+          <div class="skill-header">
+            <span class="skill-icon">🔗</span>
+            <h3 data-i18n="skill-langchain">LangChain</h3>
+            <span class="skill-level high" data-i18n="level-high">高</span>
+          </div>
+          <div class="skill-body">
+            <p data-i18n="skill-langchain-desc">文档加载、切分、检索链与任务链集成</p>
+            <div class="skill-tags">
+              <span data-i18n="tag-doc-loader">Document Loader</span>
+              <span data-i18n="tag-retrieval-chain">Retrieval Chain</span>
+              <span data-i18n="tag-agent-executor">Agent Executor</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="skill-card" data-skill="chroma">
+          <div class="skill-header">
+            <span class="skill-icon">🗄️</span>
+            <h3 data-i18n="skill-chroma">Chroma / FAISS</h3>
+            <span class="skill-level medium-high" data-i18n="level-medium-high">中高</span>
+          </div>
+          <div class="skill-body">
+            <p data-i18n="skill-chroma-desc">向量库选型、索引管理、召回效率与精度平衡</p>
+            <div class="skill-tags">
+              <span data-i18n="tag-persistence">持久化</span>
+              <span data-i18n="tag-metadata-filter">元数据过滤</span>
+              <span data-i18n="tag-batch-insert">批量插入</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="skill-card" data-skill="embedding">
+          <div class="skill-header">
+            <span class="skill-icon">🔢</span>
+            <h3 data-i18n="skill-embedding">Embedding</h3>
+            <span class="skill-level high" data-i18n="level-high">高</span>
+          </div>
+          <div class="skill-body">
+            <p data-i18n="skill-embedding-desc">模型适配、批处理、超时重试与异常恢复</p>
+            <div class="skill-tags">
+              <span data-i18n="tag-bge-m3">BGE-M3</span>
+              <span data-i18n="tag-batch-processing">Batch Processing</span>
+              <span data-i18n="tag-retry-logic">Retry Logic</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="skill-card" data-skill="rerank">
+          <div class="skill-header">
+            <span class="skill-icon">📊</span>
+            <h3 data-i18n="skill-rerank">Rerank 与评估</h3>
+            <span class="skill-level medium-high" data-i18n="level-medium-high">中高</span>
+          </div>
+          <div class="skill-body">
+            <p data-i18n="skill-rerank-desc">相关性评分、上下文压缩与答案置信度分级</p>
+            <div class="skill-tags">
+              <span data-i18n="tag-bge-reranker">BGE-Reranker</span>
+              <span data-i18n="tag-rrf-fusion">RRF 融合</span>
+              <span data-i18n="tag-confidence">置信度</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="skill-card" data-skill="lora">
+          <div class="skill-header">
+            <span class="skill-icon">🔧</span>
+            <h3 data-i18n="skill-lora">LoRA / PEFT</h3>
+            <span class="skill-level medium" data-i18n="level-medium">中</span>
+          </div>
+          <div class="skill-body">
+            <p data-i18n="skill-lora-desc">参数高效微调方法、样本构建与对比评估</p>
+            <div class="skill-tags">
+              <span data-i18n="tag-peft">PEFT</span>
+              <span data-i18n="tag-qlora">QLoRA</span>
+              <span data-i18n="tag-sample-build">样本构建</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="skill-card" data-skill="qwen">
+          <div class="skill-header">
+            <span class="skill-icon">💻</span>
+            <h3 data-i18n="skill-qwen">Qwen-3.8B 本地运行</h3>
+            <span class="skill-level medium-high" data-i18n="level-medium-high">中高</span>
+          </div>
+          <div class="skill-body">
+            <p data-i18n="skill-qwen-desc">本地推理配置、性能权衡、与 RAG 结合部署</p>
+            <div class="skill-tags">
+              <span data-i18n="tag-vllm">vLLM</span>
+              <span data-i18n="tag-gguf">GGUF</span>
+              <span data-i18n="tag-4bit-quant">4-bit 量化</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="skill-card" data-skill="multi">
+          <div class="skill-header">
+            <span class="skill-icon">🔀</span>
+            <h3 data-i18n="skill-multi">多路召回</h3>
+            <span class="skill-level high" data-i18n="level-high">高</span>
+          </div>
+          <div class="skill-body">
+            <p data-i18n="skill-multi-desc">BM25 + Dense + Rule-based 融合召回与重排序</p>
+            <div class="skill-tags">
+              <span data-i18n="tag-bm25">BM25</span>
+              <span data-i18n="tag-vector-search">向量检索</span>
+              <span data-i18n="tag-rrf">RRF</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="skill-card" data-skill="safety">
+          <div class="skill-header">
+            <span class="skill-icon">🛡️</span>
+            <h3 data-i18n="skill-safety">安全护栏</h3>
+            <span class="skill-level medium-high" data-i18n="level-medium-high">中高</span>
+          </div>
+          <div class="skill-body">
+            <p data-i18n="skill-safety-desc">输入输出安全策略、越权限制、低置信度降级</p>
+            <div class="skill-tags">
+              <span data-i18n="tag-injection-detect">注入检测</span>
+              <span data-i18n="tag-sensitive-words">敏感词</span>
+              <span data-i18n="tag-degrade-strategy">降级策略</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-left">
+        <span class="footer-brand">LT</span>
+        <p>© 2026 <span data-i18n="footer-name">李涛</span> · <span data-i18n="footer-knowledge">知识图谱</span></p>
+      </div>
+      <div class="footer-links">
+        <a href="mailto:lit82266@gmail.com">lit82266@gmail.com</a>
+        <a href="tel:17835415300">17835415300</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="./script.js"></script>
+  <script src="./knowledge-map.js"></script>
+</body>
+</html>

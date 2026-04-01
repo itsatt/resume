@@ -1,0 +1,342 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>李涛 | AI 工程化简历</title>
+  <meta name="description" content="李涛的交互式 AI 简历：3D 可视化、可交互 Demo、技术决策树。" />
+  
+  <!-- 字体 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Noto+Sans+SC:wght@400;500;700;900&display=swap" rel="stylesheet">
+  
+  <!-- Three.js -->
+  <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+
+  <!-- html2pdf.js for PDF export -->
+  <script src="https://cdn.jsdelivr.net/npm/html2pdf.js@0.10.1/dist/html2pdf.bundle.min.js"></script>
+
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body data-page="home">
+  <!-- 滚动进度条 -->
+  <div class="scroll-progress" id="scroll-progress"></div>
+
+  <!-- 3D 背景容器 -->
+  <div id="canvas-container" aria-hidden="true"></div>
+
+  <!-- 终端风格命令行 -->
+  <div class="terminal-overlay" id="terminal">
+    <div class="terminal-header">
+      <span class="terminal-dot red"></span>
+      <span class="terminal-dot yellow"></span>
+      <span class="terminal-dot green"></span>
+      <span class="terminal-title">bash — li-tao@ai-engineer</span>
+    </div>
+    <div class="terminal-body">
+      <div class="terminal-line">
+        <span class="prompt">➜</span>
+        <span class="command">whoami</span>
+      </div>
+      <div class="terminal-output">李涛 | AI 应用工程师候选人</div>
+      <div class="terminal-line">
+        <span class="prompt">➜</span>
+        <span class="command">cat skills.json | grep -E "RAG|Agent|Embedding"</span>
+      </div>
+      <div class="terminal-output typing" id="skills-typing"></div>
+      <div class="terminal-line">
+        <span class="prompt">➜</span>
+        <span class="cursor">█</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 导航 -->
+  <header class="glass-nav">
+    <a class="brand" href="./index.html">
+      <span class="brand-logo">LT</span>
+      <span class="brand-tag">AI Engineer</span>
+    </a>
+    <nav class="nav-dots">
+      <a href="./index.html" class="nav-dot active" title="首页" data-i18n="nav-home">首页</a>
+      <a href="./projects.html" class="nav-dot" title="项目" data-i18n="nav-projects">项目</a>
+      <a href="./curriculum.html" class="nav-dot" title="课程" data-i18n="nav-curriculum">课程</a>
+      <a href="./knowledge-map.html" class="nav-dot" title="图谱" data-i18n="nav-knowledge">图谱</a>
+    </nav>
+    <div class="controls-container">
+      <button class="theme-toggle" id="theme-toggle" aria-label="切换主题">
+        <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="5"/>
+          <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+        </svg>
+        <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+        </svg>
+      </button>
+      <button class="lang-toggle" id="lang-toggle" aria-label="切换语言">
+        <span class="lang-label">EN</span>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <!-- 英雄区域 - 3D 交互 -->
+    <section class="hero-section">
+      <div class="hero-content">
+        <div class="hero-badge glow" data-i18n="hero-badge">
+          <span class="pulse-dot"></span>
+          开放求职 · AI 应用/系统工程师
+        </div>
+
+        <h1 class="hero-title">
+          <span class="title-line name-line" data-i18n="hero-title-line1">李涛</span>
+          <span class="title-line" data-i18n="hero-title-line2">把 AI 能力</span>
+          <span class="title-line highlight" data-i18n="hero-title-line3">工程化交付</span>
+        </h1>
+
+        <p class="hero-subtitle">
+          <span class="contact-info">
+            <a href="mailto:lit82266@gmail.com">📧 lit82266@gmail.com</a> ·
+            <a href="tel:17835415300">📱 17835415300</a>
+          </span>
+          <br/>
+          <span data-i18n="hero-university">太原科技大学 · 光电信息科学与工程（2022 届）</span><br/>
+          <span class="subtitle-detail" data-i18n="hero-focus">专注 RAG 系统优化 / Agent 工作流 / 本地模型部署</span>
+        </p>
+
+        <!-- 个人标签 -->
+        <div class="personal-tags">
+          <span class="p-tag" data-i18n="tag-experience">🎯 3 年 AI 工程经验</span>
+          <span class="p-tag" data-i18n="tag-location">📍 重庆</span>
+          <span class="p-tag" data-i18n="tag-type">💼 全职</span>
+        </div>
+
+        <div class="hero-cta">
+          <a class="btn-primary" href="./projects.html">
+            <span data-i18n="btn-projects">查看项目</span>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+          </a>
+          <button class="btn-secondary" id="play-demo">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M8 5v14l11-7z"/>
+            </svg>
+            <span data-i18n="btn-demo">交互 Demo</span>
+          </button>
+        </div>
+      </div>
+      
+      <!-- 3D 技能球 -->
+      <div class="skill-orb-container" id="skill-orb-container">
+        <canvas id="skill-orb-canvas"></canvas>
+        <div class="orb-tooltip" id="orb-tooltip">
+          <span class="tooltip-title">RAG</span>
+          <span class="tooltip-desc">检索增强生成</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 技能时间线 -->
+    <section class="section skill-timeline-section reveal-on-scroll">
+      <div class="section-header">
+        <h2 data-i18n="timeline-title">成长时间线</h2>
+        <p class="section-desc" data-i18n="timeline-desc">3 年 AI 工程化能力提升路径</p>
+      </div>
+
+      <div class="skill-timeline">
+        <div class="timeline-item">
+          <div class="timeline-content">
+            <span class="timeline-year">2022</span>
+            <h3 data-i18n="timeline-1-title">毕业入行 · 基础夯实</h3>
+            <p data-i18n="timeline-1-desc">太原科技大学光电信息科学与工程专业毕业，开始自学 NLP 和机器学习基础</p>
+            <div class="timeline-tags">
+              <span class="timeline-tag" data-i18n="tag1-1">Python 编程</span>
+              <span class="timeline-tag" data-i18n="tag1-2">深度学习基础</span>
+              <span class="timeline-tag" data-i18n="tag1-3">Transformer</span>
+            </div>
+          </div>
+          <div class="timeline-marker">🌱</div>
+          <div class="timeline-placeholder"></div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-placeholder"></div>
+          <div class="timeline-marker">📝</div>
+          <div class="timeline-content">
+            <span class="timeline-year">2023</span>
+            <h3 data-i18n="timeline-2-title">Prompt Engineering · LLM 入门</h3>
+            <p data-i18n="timeline-2-desc">系统性学习 Prompt Engineering，掌握 Role/Context/Task 框架、Few-shot、CoT 等技术</p>
+            <div class="timeline-tags">
+              <span class="timeline-tag" data-i18n="tag2-1">Prompt 设计</span>
+              <span class="timeline-tag" data-i18n="tag2-2">结构化输出</span>
+              <span class="timeline-tag" data-i18n="tag2-3">思维链</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-content">
+            <span class="timeline-year">2024</span>
+            <h3 data-i18n="timeline-3-title">RAG 系统 · 工程实践</h3>
+            <p data-i18n="timeline-3-desc">深入 RAG 系统开发，掌握多路召回、Rerank 重排序、Embedding 优化等核心技术</p>
+            <div class="timeline-tags">
+              <span class="timeline-tag" data-i18n="tag3-1">LangChain</span>
+              <span class="timeline-tag" data-i18n="tag3-2">向量检索</span>
+              <span class="timeline-tag" data-i18n="tag3-3">BGE 模型</span>
+            </div>
+          </div>
+          <div class="timeline-marker">🔍</div>
+          <div class="timeline-placeholder"></div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-placeholder"></div>
+          <div class="timeline-marker">🧠</div>
+          <div class="timeline-content">
+            <span class="timeline-year">2025</span>
+            <h3 data-i18n="timeline-4-title">Agent / 本地部署 · 能力扩展</h3>
+            <p data-i18n="timeline-4-desc">探索 ReAct Agent 工作流，实现 Qwen-3.8B 本地部署与 LoRA 微调，形成完整工程能力</p>
+            <div class="timeline-tags">
+              <span class="timeline-tag" data-i18n="tag4-1">ReAct</span>
+              <span class="timeline-tag" data-i18n="tag4-2">Qwen</span>
+              <span class="timeline-tag" data-i18n="tag4-3">LoRA</span>
+              <span class="timeline-tag" data-i18n="tag4-4">vLLM</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 核心项目卡片 -->
+    <section class="section projects-preview reveal-on-scroll">
+      <div class="section-header">
+        <h2 data-i18n="projects-title">代表项目</h2>
+        <a class="view-all" href="./projects.html">
+          <span data-i18n="projects-view-all">查看全部</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M5 12h14M12 5l7 7-7 7"/>
+          </svg>
+        </a>
+      </div>
+
+      <div class="project-showcase">
+        <article class="project-card featured">
+          <div class="card-glow"></div>
+          <div class="card-header">
+            <span class="project-tag" data-i18n="project-featured-tag">旗舰项目</span>
+            <span class="project-tech">Hybrid RAG</span>
+          </div>
+          <h3 data-i18n="project-1-title">智能检索增强生成系统</h3>
+          <p class="project-desc" data-i18n="project-1-desc">
+            多路召回 + 动态重排序 + 安全护栏，检索准确率提升 47%
+          </p>
+          <div class="project-metrics">
+            <div class="metric">
+              <span class="metric-value">47%</span>
+              <span class="metric-label" data-i18n="metric-accuracy">准确率提升</span>
+            </div>
+            <div class="metric">
+              <span class="metric-value">&lt;800ms</span>
+              <span class="metric-label" data-i18n="metric-latency">P95 延迟</span>
+            </div>
+            <div class="metric">
+              <span class="metric-value">99.2%</span>
+              <span class="metric-label" data-i18n="metric-availability">可用性</span>
+            </div>
+          </div>
+          <a class="card-link" href="./projects.html">
+            <span data-i18n="view-details">查看详情</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+          </a>
+        </article>
+
+        <article class="project-card">
+          <div class="card-header">
+            <span class="project-tag">Agent</span>
+          </div>
+          <h3 data-i18n="project-2-title">ReAct 工作流引擎</h3>
+          <p class="project-desc" data-i18n="project-2-desc">推理 + 行动循环，支持多工具编排与失败恢复</p>
+          <a class="card-link" href="./projects.html"><span data-i18n="view-details-arrow">查看详情 →</span></a>
+        </article>
+
+        <article class="project-card">
+          <div class="card-header">
+            <span class="project-tag" data-i18n="project-3-tag">Local LLM</span>
+          </div>
+          <h3 data-i18n="project-3-title">Qwen-3.8B 本地部署</h3>
+          <p class="project-desc" data-i18n="project-3-desc">LoRA 微调 + vLLM 推理优化，成本降低 83%</p>
+          <a class="card-link" href="./projects.html"><span data-i18n="view-details-arrow">查看详情 →</span></a>
+        </article>
+      </div>
+    </section>
+
+    <!-- 交互式 Demo 入口 -->
+    <section class="section demo-section reveal-on-scroll" id="demo-section">
+      <div class="section-header">
+        <h2 data-i18n="demo-title">现场体验</h2>
+        <p class="section-desc" data-i18n="demo-desc">试试我的 RAG 系统（Demo 版本）</p>
+      </div>
+
+      <div class="demo-container">
+        <!-- 模式选择 -->
+        <div class="demo-mode-selector">
+          <label class="mode-option">
+            <input type="radio" name="demo-mode" value="simple" checked>
+            <span class="mode-icon">⚡</span>
+            <span class="mode-label">
+              <strong data-i18n="demo-simple">简单问答</strong>
+              <small data-i18n="demo-simple-desc">快速响应，适合日常对话</small>
+            </span>
+          </label>
+          <label class="mode-option">
+            <input type="radio" name="demo-mode" value="rag">
+            <span class="mode-icon">🔍</span>
+            <span class="mode-label">
+              <strong data-i18n="demo-rag">RAG 检索</strong>
+              <small data-i18n="demo-rag-desc">基于知识库，适合专业问题</small>
+            </span>
+          </label>
+        </div>
+
+        <div class="demo-input-area">
+          <textarea id="demo-query" data-i18n-placeholder="demo-input-placeholder" placeholder="输入你的问题，例如：'RAG 系统中如何提升检索准确率？'" rows="3"></textarea>
+          <button class="btn-submit" id="submit-demo">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/>
+            </svg>
+            <span data-i18n="demo-send">发送</span>
+          </button>
+        </div>
+        <div class="demo-response" id="demo-response">
+          <div class="response-placeholder">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
+            </svg>
+            <p data-i18n="demo-placeholder">选择模式后，点击上方发送按钮体验</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-left">
+        <span class="footer-brand">LT</span>
+        <p>© 2026 <span data-i18n="footer-name">李涛</span> · <span data-i18n="footer-desc">交互式 AI 简历</span></p>
+      </div>
+      <div class="footer-links">
+        <a href="mailto:lit82266@gmail.com">lit82266@gmail.com</a>
+        <a href="tel:17835415300">17835415300</a>
+        <a href="#" id="download-resume" data-i18n="footer-download">下载 PDF</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="./script.js"></script>
+</body>
+</html>
