@@ -22,3 +22,6 @@ faiss_index/
 # 临时文件
 *.tmp
 .DS_Store
+node_modules/
+npm-debug.log
+.DS_Store

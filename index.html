@@ -308,6 +308,55 @@
       </div>
     </section>
 
+    <!-- 交互式文本布局 Demo - Pretext -->
+    <section class="section pretext-section reveal-on-scroll" id="pretext-section">
+      <div class="section-header">
+        <h2>交互式文本布局 <span class="tech-badge">Pretext</span></h2>
+        <p class="section-desc">鼠标移动改变文本容器宽度，文字实时重新流动布局</p>
+      </div>
+
+      <div class="pretext-container">
+        <div class="pretext-canvas-wrapper">
+          <canvas id="pretext-canvas"></canvas>
+          <div class="pretext-overlay">
+            <div class="mouse-indicator" id="mouse-indicator">
+              <div class="indicator-ring"></div>
+              <span>移动鼠标改变布局</span>
+            </div>
+          </div>
+        </div>
+        <div class="pretext-controls">
+          <div class="control-group">
+            <label>容器宽度：<span id="width-value">500</span>px</label>
+            <input type="range" id="width-slider" min="200" max="800" value="500" />
+          </div>
+          <div class="control-group">
+            <label>文本内容</label>
+            <select id="text-select">
+              <option value="intro">自我介绍</option>
+              <option value="skills">技术栈</option>
+              <option value="project">项目描述</option>
+              <option value="custom">自定义</option>
+            </select>
+          </div>
+          <div class="stats">
+            <div class="stat">
+              <span class="stat-label">行数</span>
+              <span class="stat-value" id="line-count">0</span>
+            </div>
+            <div class="stat">
+              <span class="stat-label">高度</span>
+              <span class="stat-value" id="text-height">0</span>
+            </div>
+            <div class="stat">
+              <span class="stat-label">FPS</span>
+              <span class="stat-value" id="fps-counter">0</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- 交互式 Demo 入口 -->
     <section class="section demo-section reveal-on-scroll" id="demo-section">
       <div class="section-header">

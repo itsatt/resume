@@ -1582,6 +1582,200 @@ function initSkillOrb() {
   animate();
 }
 
+// ===== Pretext 交互式文本布局 =====
+let pretextApp = null;
+
+function initPretext() {
+  const canvas = document.getElementById('pretext-canvas');
+  if (!canvas) return;
+
+  // 动态导入 Pretext
+  import('@chenglou/pretext').then(({ prepareWithSegments, layoutWithLines, walkLineRanges }) => {
+    const ctx = canvas.getContext('2d');
+
+    // 设置 canvas 尺寸
+    function resizeCanvas() {
+      const rect = canvas.parentElement.getBoundingClientRect();
+      canvas.width = rect.width * window.devicePixelRatio;
+      canvas.height = rect.height * window.devicePixelRatio;
+      ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+      return { width: rect.width, height: rect.height };
+    }
+
+    // 示例文本
+    const texts = {
+      intro: `李涛 | AI 应用工程师
+
+3 年 AI 工程化经验，专注于 RAG 检索增强生成、Agent 工作流和本地大模型部署。
+
+从传统软件开发转型 AI 工程化，主导智能安防 Agent 系统开发，实现 RAG 检索增强、多路召回与 Qwen-38B 集成。构建智能巡检平台，集成 3D 可视化、H.265 视频流、WebSocket 实时通讯与 AI 图像识别。
+
+技术栈：Vue3 · Three.js · WebSocket · FAISS/Chroma · Qwen-38B · RAG · ArkTS · OpenHarmony`,
+
+      skills: `核心技能栈
+
+【AI 工程化】
+RAG 架构设计 · FAISS/Chroma 向量检索 · BGE-M3 Embedding
+多路召回融合 · Rerank 重排序 · Prompt Engineering
+Qwen-38B 本地部署 · LoRA/PEFT 微调 · Agent 工作流
+
+【前端开发】
+Vue3 + TypeScript · Three.js 3D 可视化 · WebSocket 实时通讯
+H.265 视频流（WebRTC/RTSP）· Canvas 渲染优化
+
+【全栈能力】
+OpenHarmony/ArkTS · CMake 集成 · Python · MySQL`,
+
+      project: `旗舰项目：智能安防 Agent 系统
+
+技术方案：
+• RAG 架构设计 - 告警日志结构化处理，Chunking 分块策略，支持 FAISS/Chroma 双向量库
+• 多路召回融合 - 相似度匹配 + 关键词匹配 + Rerank 重排序，准确率提升 47%
+• Qwen-38B 集成 - Prompt Engineering 设计告警分析模板，实现原因归纳与报告自动生成
+• Vue3 可视化 - Three.js 3D 展示 + WebSocket 实时更新，支持 6 大功能模块联动
+
+性能指标：47% 准确率提升 · 2 路召回路径 · 6+ 功能模块 · 实时 WebSocket`,
+
+      custom: `Pretext 是一个纯 JavaScript/TypeScript 库，用于多行文本测量和布局。
+
+它不需要调用 getBoundingClientRect 等触发 reflow 的 API，而是使用 Canvas measureText 进行文本 shaping，支持所有语言、emoji 和混合双向文本。
+
+核心优势：
+• prepare() 约 19ms - 一次性文本分析 + 测量
+• layout() 约 0.09ms - 纯算术计算
+• 支持多语言、emoji、混合双向文本
+
+这个 Demo 展示了如何使用 Pretext 实现交互式文本布局，鼠标移动时文字会实时重新流动。`
+    };
+
+    let currentText = texts.intro;
+    let prepared = null;
+    let containerWidth = 500;
+    const lineHeight = 26;
+    const fontSize = 16;
+    const fontFamily = '"JetBrains Mono", "Noto Sans SC", monospace';
+    const padding = 30;
+
+    // 渲染文本
+    function render() {
+      const { width, height } = resizeCanvas();
+      ctx.clearRect(0, 0, width, height);
+
+      // 绘制背景网格
+      ctx.strokeStyle = 'rgba(0, 245, 212, 0.1)';
+      ctx.lineWidth = 0.5;
+      for (let y = padding; y < height; y += lineHeight) {
+        ctx.beginPath();
+        ctx.moveTo(padding, y);
+        ctx.lineTo(width - padding, y);
+        ctx.stroke();
+      }
+
+      // 准备文本
+      prepared = prepareWithSegments(currentText, `${fontSize}px ${fontFamily}`, { whiteSpace: 'pre-wrap' });
+
+      // 布局文本
+      const { lines } = layoutWithLines(prepared, containerWidth - padding * 2, lineHeight);
+
+      // 更新统计
+      document.getElementById('line-count').textContent = lines.length;
+      document.getElementById('text-height').textContent = Math.round(lines.length * lineHeight);
+
+      // 绘制文本行
+      ctx.fillStyle = '#f0f4ff';
+      ctx.font = `${fontSize}px ${fontFamily}`;
+      ctx.textBaseline = 'top';
+
+      lines.forEach((line, i) => {
+        const x = padding;
+        const y = padding + i * lineHeight;
+        ctx.fillText(line.text, x, y);
+      });
+
+      // 绘制容器边界
+      ctx.strokeStyle = '#00f5d4';
+      ctx.lineWidth = 2;
+      ctx.setLineDash([5, 5]);
+      ctx.strokeRect(padding, padding, containerWidth - padding * 2, height - padding * 2);
+      ctx.setLineDash([]);
+    }
+
+    // FPS 计数
+    let frameCount = 0;
+    let lastTime = performance.now();
+    function updateFps() {
+      frameCount++;
+      const now = performance.now();
+      if (now - lastTime >= 1000) {
+        document.getElementById('fps-counter').textContent = frameCount;
+        frameCount = 0;
+        lastTime = now;
+      }
+      requestAnimationFrame(updateFps);
+    }
+
+    // 初始化
+    resizeCanvas();
+    render();
+    updateFps();
+
+    // 滑块控制
+    const widthSlider = document.getElementById('width-slider');
+    const widthValue = document.getElementById('width-value');
+    if (widthSlider) {
+      widthSlider.addEventListener('input', (e) => {
+        containerWidth = parseInt(e.target.value);
+        widthValue.textContent = containerWidth;
+        render();
+      });
+    }
+
+    // 文本选择
+    const textSelect = document.getElementById('text-select');
+    if (textSelect) {
+      textSelect.addEventListener('change', (e) => {
+        currentText = texts[e.target.value] || texts.intro;
+        render();
+      });
+    }
+
+    // 鼠标移动效果
+    const indicator = document.getElementById('mouse-indicator');
+    const canvasWrapper = document.querySelector('.pretext-canvas-wrapper');
+    if (canvasWrapper && indicator) {
+      canvasWrapper.addEventListener('mousemove', (e) => {
+        const rect = canvasWrapper.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+
+        // 根据鼠标位置动态调整容器宽度
+        const newWidth = Math.max(200, Math.min(800, x + 100));
+        containerWidth = newWidth;
+        widthSlider.value = newWidth;
+        widthValue.textContent = Math.round(newWidth);
+
+        // 更新指示器位置
+        indicator.style.left = `${x}px`;
+        indicator.style.top = `${y}px`;
+        indicator.classList.add('visible');
+
+        render();
+      });
+
+      canvasWrapper.addEventListener('mouseleave', () => {
+        indicator.classList.remove('visible');
+      });
+    }
+
+    // 窗口大小变化
+    window.addEventListener('resize', render);
+
+    pretextApp = { render, resizeCanvas };
+  }).catch(err => {
+    console.error('Pretext 加载失败:', err);
+  });
+}
+
 // ===== 页面加载完成 =====
 document.addEventListener('DOMContentLoaded', () => {
   initThemeToggle();
@@ -1593,6 +1787,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initDemo();
   initNavActive();
   initSkillOrb();
+  initPretext();
 
   // 雷达图延迟初始化（确保容器已渲染）
   setTimeout(initRadarChart, 100);
