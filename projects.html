@@ -58,12 +58,13 @@
       <div class="project-header">
         <div class="project-tags">
           <span class="tag featured" data-i18n="project-featured-tag">旗舰项目</span>
-          <span class="tag">Hybrid RAG</span>
+          <span class="tag">AI Agent</span>
+          <span class="tag">RAG</span>
           <span class="tag" data-i18n="tag-production">生产级</span>
         </div>
-        <h2 data-i18n="project-1-title">智能检索增强生成系统</h2>
+        <h2 data-i18n="project-1-title">智能安防 Agent 系统</h2>
       </div>
-      
+
       <div class="project-grid">
         <div class="project-main">
           <div class="architecture-diagram">
@@ -73,79 +74,79 @@
                 <div class="diagram-box input">
                   <span>📄</span>
                   <strong data-i18n="diagram-input">输入</strong>
-                  <small data-i18n="diagram-input-docs">PDF/TXT/Excel</small>
+                  <small data-i18n="diagram-input-docs">告警日志/传感器数据</small>
                 </div>
                 <div class="diagram-arrow">→</div>
                 <div class="diagram-box process">
                   <span>🔄</span>
-                  <strong data-i18n="diagram-parse">文档解析</strong>
-                  <small data-i18n="diagram-parse-desc">统一处理</small>
+                  <strong data-i18n="diagram-parse">数据解析</strong>
+                  <small data-i18n="diagram-parse-desc">结构化处理</small>
                 </div>
               </div>
               <div class="diagram-row">
                 <div class="diagram-box process">
                   <span>🔍</span>
-                  <strong data-i18n="diagram-retrieve">多路召回</strong>
-                  <small data-i18n="diagram-retrieve-desc">BM25 + 向量 + 规则</small>
+                  <strong data-i18n="diagram-retrieve">RAG 检索</strong>
+                  <small data-i18n="diagram-retrieve-desc">FAISS + Chroma 双路</small>
                 </div>
                 <div class="diagram-arrow">→</div>
                 <div class="diagram-box process">
                   <span>📊</span>
                   <strong>Rerank</strong>
-                  <small data-i18n="diagram-rerank-desc">BGE-Reranker</small>
+                  <small data-i18n="diagram-rerank-desc">相似度匹配 + 去重</small>
                 </div>
               </div>
               <div class="diagram-row">
                 <div class="diagram-box process">
-                  <span>🛡️</span>
-                  <strong data-i18n="diagram-safety">安全护栏</strong>
-                  <small data-i18n="diagram-safety-desc">注入检测/敏感词</small>
+                  <span>🤖</span>
+                  <strong data-i18n="diagram-agent">Agent 分析</strong>
+                  <small data-i18n="diagram-agent-desc">Qwen-38B 调用</small>
                 </div>
                 <div class="diagram-arrow">→</div>
                 <div class="diagram-box output">
                   <span>✨</span>
-                  <strong data-i18n="diagram-generate">生成</strong>
-                  <small data-i18n="diagram-generate-desc">Prompt 模板化</small>
+                  <strong data-i18n="diagram-generate">输出</strong>
+                  <small data-i18n="diagram-generate-desc">告警分类/报告生成</small>
                 </div>
               </div>
             </div>
           </div>
-          
+
           <div class="project-content">
             <h3 data-i18n="section-tech-solution">技术方案</h3>
             <ul class="tech-list">
               <li>
                 <span class="tech-icon">📦</span>
                 <div>
-                  <strong data-i18n="tech-parse-layer">文档解析层</strong>
-                  <p data-i18n="tech-parse-layer-desc">PDF / TXT / Excel 多源数据统一处理，支持大文件分块流式处理</p>
+                  <strong data-i18n="tech-parse-layer">RAG 架构设计</strong>
+                  <p data-i18n="tech-parse-layer-desc">告警日志结构化处理，Chunking 分块策略，支持 FAISS/Chroma 双向量库</p>
                 </div>
               </li>
               <li>
                 <span class="tech-icon">🔍</span>
                 <div>
-                  <strong data-i18n="tech-retrieve-layer">检索层</strong>
-                  <p data-i18n="tech-retrieve-layer-desc">BM25 关键词检索 + Chroma/FAISS 向量检索 + 正则规则检索，三路召回</p>
+                  <strong data-i18n="tech-retrieve-layer">多路召回融合</strong>
+                  <p data-i18n="tech-retrieve-layer-desc">相似度匹配 + 关键词匹配 + Rerank 重排序，准确率提升 47%</p>
                 </div>
               </li>
               <li>
-                <span class="tech-icon">📈</span>
+                <span class="tech-icon">🤖</span>
                 <div>
-                  <strong data-i18n="tech-sort-layer">排序层</strong>
-                  <p data-i18n="tech-sort-layer-desc">Rerank 精细排序 + 置信度判定 + 上下文压缩，只保留关键信息</p>
+                  <strong data-i18n="tech-sort-layer">Qwen-38B 集成</strong>
+                  <p data-i18n="tech-sort-layer-desc">Prompt Engineering 设计告警分析模板，实现原因归纳与报告自动生成</p>
                 </div>
               </li>
               <li>
-                <span class="tech-icon">🛡️</span>
+                <span class="tech-icon">🖼️</span>
                 <div>
-                  <strong data-i18n="tech-safety-layer">安全层</strong>
-                  <p data-i18n="tech-safety-layer-desc">提示注入检测、敏感词过滤、越权限制、低置信度降级</p>
+                  <strong data-i18n="tech-safety-layer">Vue3 可视化</strong>
+                  <p data-i18n="tech-safety-layer-desc">Three.js 3D 展示 + WebSocket 实时更新，支持 6 大功能模块联动</p>
                 </div>
               </li>
             </ul>
           </div>
         </div>
-        
+
         <div class="project-sidebar">
           <div class="metrics-card">
             <h3 data-i18n="card-performance">性能指标</h3>
@@ -154,28 +155,28 @@
                 <div class="metric-icon">🎯</div>
                 <div class="metric-info">
                   <span class="metric-value">47%</span>
-                  <span class="metric-label" data-i18n="metric-accuracy">检索准确率提升</span>
+                  <span class="metric-label" data-i18n="metric-accuracy">准确率提升</span>
+                </div>
+              </div>
+              <div class="metric-item">
+                <div class="metric-icon">🔀</div>
+                <div class="metric-info">
+                  <span class="metric-value">2 路</span>
+                  <span class="metric-label" data-i18n="metric-recall">召回路径</span>
+                </div>
+              </div>
+              <div class="metric-item">
+                <div class="metric-icon">📊</div>
+                <div class="metric-info">
+                  <span class="metric-value">6+</span>
+                  <span class="metric-label" data-i18n="metric-modules">功能模块</span>
                 </div>
               </div>
               <div class="metric-item">
                 <div class="metric-icon">⚡</div>
                 <div class="metric-info">
-                  <span class="metric-value">&lt;800ms</span>
-                  <span class="metric-label" data-i18n="metric-latency">P95 延迟</span>
-                </div>
-              </div>
-              <div class="metric-item">
-                <div class="metric-icon">📈</div>
-                <div class="metric-info">
-                  <span class="metric-value">99.2%</span>
-                  <span class="metric-label" data-i18n="metric-availability">系统可用性</span>
-                </div>
-              </div>
-              <div class="metric-item">
-                <div class="metric-icon">💾</div>
-                <div class="metric-info">
-                  <span class="metric-value">10W+</span>
-                  <span class="metric-label" data-i18n="metric-docs">文档处理量</span>
+                  <span class="metric-value">实时</span>
+                  <span class="metric-label" data-i18n="metric-realtime">WebSocket</span>
                 </div>
               </div>
             </div>
@@ -184,13 +185,13 @@
           <div class="tech-stack-card">
             <h3 data-i18n="card-tech-stack">技术栈</h3>
             <div class="stack-tags">
-              <span class="stack-tag">Python</span>
-              <span class="stack-tag">LangChain</span>
-              <span class="stack-tag">Chroma</span>
+              <span class="stack-tag">Vue3</span>
+              <span class="stack-tag">Three.js</span>
+              <span class="stack-tag">WebSocket</span>
               <span class="stack-tag">FAISS</span>
-              <span class="stack-tag">BGE-M3</span>
-              <span class="stack-tag">BGE-Reranker</span>
-              <span class="stack-tag">FastAPI</span>
+              <span class="stack-tag">Chroma</span>
+              <span class="stack-tag">Qwen-38B</span>
+              <span class="stack-tag">RAG</span>
             </div>
           </div>
         </div>
@@ -207,83 +208,78 @@
       <div class="optimization-grid">
         <article class="opt-card">
           <div class="opt-icon">🚀</div>
-          <h3 data-i18n="opt-1-title">Embedding 批处理优化</h3>
-          <p data-i18n="opt-1-desc">解决长任务卡死问题</p>
+          <h3 data-i18n="opt-1-title">RAG 双路召回融合</h3>
+          <p data-i18n="opt-1-desc">FAISS + Chroma 双向量库策略</p>
           <div class="opt-detail">
-            <pre><code># 批处理 + 超时控制 + 指数退避
-for batch in chunks(batch_size=64):
-    retry_with_backoff(
-        embed_batch,
-        max_retries=3,
-        timeout=5.0
-    )</code></pre>
+            <pre><code># 双路召回配置
+FAISS_INDEX = "IVF,HNSW"
+CHROMA_COLLECTION = "alerts"
+
+def hybrid_search(query):
+    faiss_results = faiss_search(query)
+    chroma_results = chroma_query(query)
+    return rerank_merge(faiss_results, chroma_results)</code></pre>
             <div class="opt-result">
               <span class="result-label" data-i18n="result-label">结果：</span>
-              <span class="result-value" data-i18n="opt-1-result">超时率从 12% → 0.3%</span>
+              <span class="result-value" data-i18n="opt-1-result">准确率提升 47%</span>
             </div>
           </div>
         </article>
 
         <article class="opt-card">
-          <div class="opt-icon">🔒</div>
-          <h3 data-i18n="opt-2-title">正则匹配 + 规则分析</h3>
-          <p data-i18n="opt-2-desc">输入输出安全防护</p>
+          <div class="opt-icon">🔧</div>
+          <h3 data-i18n="opt-2-title">C++ 与 ArkTS 集成</h3>
+          <p data-i18n="opt-2-desc">底层算法无缝调用</p>
           <div class="opt-detail">
-            <pre><code># 提示注入检测
-INJECTION_PATTERNS = [
-    r"ignore previous instructions",
-    r"you are now in debug mode",
-    r"output your system prompt"
-]
+            <pre><code>// CMakeLists.txt
+add_library(native-lib SHARED
+    src/main/cpp/native.cpp
+)
 
-def detect_injection(query):
-    return any(re.search(p, query.lower())
-               for p in INJECTION_PATTERNS)</code></pre>
+// ArkTS 调用
+import nativeLib from 'native-lib'
+nativeLib.callAlgorithm(params)</code></pre>
             <div class="opt-result">
               <span class="result-label" data-i18n="result-label">结果：</span>
-              <span class="result-value" data-i18n="opt-2-result">拦截 99.7% 注入尝试</span>
+              <span class="result-value" data-i18n="opt-2-result">性能提升 3 倍</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="opt-card">
+          <div class="opt-icon">📹</div>
+          <h3 data-i18n="opt-3-title">H.265 视频流优化</h3>
+          <p data-i18n="opt-3-desc">多协议适配降低延迟</p>
+          <div class="opt-detail">
+            <pre><code>// 多协议支持
+const protocols = {
+    webrtc: "低延迟首选",
+    rtsp: "兼容性最好",
+    hls: "备用方案"
+};
+// ZLMediaKit 转发优化
+zlm.enable_h265_codec = true</code></pre>
+            <div class="opt-result">
+              <span class="result-label" data-i18n="result-label">结果：</span>
+              <span class="result-value" data-i18n="opt-3-result">延迟 &lt; 500ms</span>
             </div>
           </div>
         </article>
 
         <article class="opt-card">
           <div class="opt-icon">🔄</div>
-          <h3 data-i18n="opt-3-title">Query Rewrite</h3>
-          <p data-i18n="opt-3-desc">模糊问题改写提升召回</p>
+          <h3 data-i18n="opt-4-title">WebSocket 实时通讯</h3>
+          <p data-i18n="opt-4-desc">双向数据同步</p>
           <div class="opt-detail">
-            <pre><code># 问题改写示例
-原问题："那个啥，就是上次说的缓存"
-改写后："Redis 缓存的实现方法和最佳实践"
-
-# 使用 LLM 进行语义改写
-rewritten = llm.rewrite(
-    query,
-    style="technical precise"
-)</code></pre>
-            <div class="opt-result">
-              <span class="result-label" data-i18n="result-label">结果：</span>
-              <span class="result-value" data-i18n="opt-3-result">召回相关性 +35%</span>
-            </div>
-          </div>
-        </article>
-
-        <article class="opt-card">
-          <div class="opt-icon">🎯</div>
-          <h3 data-i18n="opt-4-title">多路召回权重融合</h3>
-          <p data-i18n="opt-4-desc">RRF 倒数排名融合</p>
-          <div class="opt-detail">
-            <pre><code># RRF 融合公式
-score(d) = 1/(k+rank_bm25) + 1/(k+rank_dense)
-
-# 权重配置
-WEIGHTS = {
-    "bm25": 0.3,
-    "dense": 0.5,
-    "rule": 0.2
+            <pre><code>// WebSocket 协议设计
+ws.onmessage = (event) => {
+    const data = JSON.parse(event.data)
+    if (data.type === 'sensor') update3D(data)
+    if (data.type === 'alert') showNotification(data)
 }</code></pre>
             <div class="opt-result">
               <span class="result-label" data-i18n="result-label">结果：</span>
-              <span class="result-value" data-i18n="opt-4-result">复杂问题覆盖率 +28%</span>
+              <span class="result-value" data-i18n="opt-4-result">实时同步 &lt; 100ms</span>
             </div>
           </div>
         </article>
@@ -294,11 +290,11 @@ WEIGHTS = {
     <section class="project-detail reveal-on-scroll">
       <div class="project-header">
         <div class="project-tags">
-          <span class="tag">Agent</span>
-          <span class="tag">ReAct</span>
-          <span class="tag" data-i18n="tag-workflow">工作流</span>
+          <span class="tag">OpenHarmony</span>
+          <span class="tag">ArkTS</span>
+          <span class="tag" data-i18n="tag-embedded">嵌入式</span>
         </div>
-        <h2 data-i18n="project-2-title">ReAct 智能体工作流引擎</h2>
+        <h2 data-i18n="project-2-title">鸿蒙系统应用开发</h2>
       </div>
 
       <div class="project-grid">
@@ -307,31 +303,31 @@ WEIGHTS = {
             <h3 data-i18n="project-2-core-design">核心设计</h3>
             <ul class="tech-list">
               <li>
-                <span class="tech-icon">🧠</span>
+                <span class="tech-icon">📱</span>
                 <div>
-                  <strong data-i18n="agent-reason-act">Reason-Act 循环</strong>
-                  <p data-i18n="agent-reason-act-desc">先推理再调用工具，避免盲目生成。每次迭代记录思考轨迹。</p>
-                </div>
-              </li>
-              <li>
-                <span class="tech-icon">👥</span>
-                <div>
-                  <strong data-i18n="agent-roles">角色分工</strong>
-                  <p data-i18n="agent-roles-desc">Planner（任务拆解）→ Retriever（检索）→ ToolRunner（执行）→ Reporter（整合）</p>
+                  <strong data-i18n="agent-reason-act">RTK 定位系统</strong>
+                  <p data-i18n="agent-reason-act-desc">二维展示 RTK 芯片从定位点到固定点的过程，实现数据可视化</p>
                 </div>
               </li>
               <li>
                 <span class="tech-icon">🔧</span>
                 <div>
-                  <strong data-i18n="agent-tools">工具接入</strong>
-                  <p data-i18n="agent-tools-desc">检索工具、计算工具、规则引擎、知识库查询，支持动态注册</p>
+                  <strong data-i18n="agent-roles">丝杆检测系统</strong>
+                  <p data-i18n="agent-roles-desc">通过硬件控制探头往返运动，在 UIS7875/RK3588 平台实现数据展示</p>
                 </div>
               </li>
               <li>
-                <span class="tech-icon">🔙</span>
+                <span class="tech-icon">🔗</span>
                 <div>
-                  <strong data-i18n="agent-recovery">失败恢复</strong>
-                  <p data-i18n="agent-recovery-desc">步骤回退、自动重试、降级回答策略，保证系统鲁棒性</p>
+                  <strong data-i18n="agent-tools">CMake 集成</strong>
+                  <p data-i18n="agent-tools-desc">编写 CMake 脚本实现 C++ 与 ArkTS 无缝集成，支持底层算法调用</p>
+                </div>
+              </li>
+              <li>
+                <span class="tech-icon">✅</span>
+                <div>
+                  <strong data-i18n="agent-recovery">XTS/MDTP 认证</strong>
+                  <p data-i18n="agent-recovery-desc">通过 XTS 测试和 MDTP 应用测试，完成 MineHarmony 认证</p>
                 </div>
               </li>
             </ul>
@@ -345,15 +341,15 @@ WEIGHTS = {
               <div class="metric-item">
                 <div class="metric-icon">✅</div>
                 <div class="metric-info">
-                  <span class="metric-value">92%</span>
-                  <span class="metric-label" data-i18n="agent-completion-rate">任务完成率</span>
+                  <span class="metric-value">2 项</span>
+                  <span class="metric-label" data-i18n="agent-systems">系统开发</span>
                 </div>
               </div>
               <div class="metric-item">
-                <div class="metric-icon">🔄</div>
+                <div class="metric-icon">🏆</div>
                 <div class="metric-info">
-                  <span class="metric-value">3.2</span>
-                  <span class="metric-label" data-i18n="agent-iterations">平均迭代次数</span>
+                  <span class="metric-value">100%</span>
+                  <span class="metric-label" data-i18n="agent-cert">认证通过</span>
                 </div>
               </div>
             </div>
@@ -362,10 +358,12 @@ WEIGHTS = {
           <div class="tech-stack-card">
             <h3 data-i18n="card-tech-stack">技术栈</h3>
             <div class="stack-tags">
-              <span class="stack-tag">LangChain</span>
-              <span class="stack-tag">ReAct</span>
-              <span class="stack-tag">Tool Calling</span>
-              <span class="stack-tag">State Machine</span>
+              <span class="stack-tag">ArkTS</span>
+              <span class="stack-tag">ArkUI</span>
+              <span class="stack-tag">CMake</span>
+              <span class="stack-tag">DevEco Studio</span>
+              <span class="stack-tag">XDevice</span>
+              <span class="stack-tag">MDTP</span>
             </div>
           </div>
         </div>
@@ -376,11 +374,11 @@ WEIGHTS = {
     <section class="project-detail reveal-on-scroll">
       <div class="project-header">
         <div class="project-tags">
-          <span class="tag">Local LLM</span>
-          <span class="tag">LoRA</span>
-          <span class="tag">PEFT</span>
+          <span class="tag">智能巡检</span>
+          <span class="tag">Three.js</span>
+          <span class="tag">视频流</span>
         </div>
-        <h2 data-i18n="project-3-title">Qwen-3.8B 本地部署与微调</h2>
+        <h2 data-i18n="project-3-title">智能巡检平台</h2>
       </div>
 
       <div class="project-grid">
@@ -389,31 +387,31 @@ WEIGHTS = {
             <h3 data-i18n="project-3-implementation">实施路径</h3>
             <ul class="tech-list">
               <li>
-                <span class="tech-icon">💻</span>
+                <span class="tech-icon">🖼️</span>
                 <div>
-                  <strong data-i18n="llm-inference">本地推理配置</strong>
-                  <p data-i18n="llm-inference-desc">vLLM 推理引擎，4-bit 量化，上下文窗口 8K，单卡 24GB 显存可运行</p>
+                  <strong data-i18n="llm-inference">3D 可视化平台</strong>
+                  <p data-i18n="llm-inference-desc">使用 Three.js 实现 3D 建模，搭建巡检设备管理界面与巡检点配置</p>
                 </div>
               </li>
               <li>
-                <span class="tech-icon">🎛️</span>
+                <span class="tech-icon">🔌</span>
                 <div>
-                  <strong data-i18n="llm-params">推理参数优化</strong>
-                  <p data-i18n="llm-params-desc">temperature=0.7, top_p=0.9, repetition_penalty=1.1，平衡创造性与稳定性</p>
+                  <strong data-i18n="llm-params">WebSocket 通讯</strong>
+                  <p data-i18n="llm-params-desc">双向实时通讯，接收传感器数据并控制设备，支持多端协同</p>
                 </div>
               </li>
               <li>
-                <span class="tech-icon">🔧</span>
+                <span class="tech-icon">📹</span>
                 <div>
-                  <strong data-i18n="llm-lora">LoRA / PEFT 微调</strong>
-                  <p data-i18n="llm-lora-desc">参数高效微调，仅训练 0.1% 参数，注入领域知识，成本降低 90%</p>
+                  <strong data-i18n="llm-lora">H.265 视频流</strong>
+                  <p data-i18n="llm-lora-desc">集成 EasyWasmPlayer/WebRTC/RTSP，实现高清视频流畅播放与转发</p>
                 </div>
               </li>
               <li>
-                <span class="tech-icon">📊</span>
+                <span class="tech-icon">🤖</span>
                 <div>
-                  <strong data-i18n="llm-comparison">性能对比</strong>
-                  <p data-i18n="llm-comparison-desc">对比云端 API：成本 -83%，延迟 -40%，可控性 +100%</p>
+                  <strong data-i18n="llm-comparison">AI 图像识别</strong>
+                  <p data-i18n="llm-comparison-desc">接入 AI 图像识别服务，实现仪表读数识别与异常检测功能</p>
                 </div>
               </li>
             </ul>
@@ -422,20 +420,20 @@ WEIGHTS = {
 
         <div class="project-sidebar">
           <div class="metrics-card">
-            <h3 data-i18n="project-3-metrics">性能对比</h3>
+            <h3 data-i18n="project-3-metrics">功能特性</h3>
             <div class="metrics-list">
               <div class="metric-item">
-                <div class="metric-icon">💰</div>
+                <div class="metric-icon">🎮</div>
                 <div class="metric-info">
-                  <span class="metric-value">-83%</span>
-                  <span class="metric-label" data-i18n="llm-cost">成本降低</span>
+                  <span class="metric-value">3D</span>
+                  <span class="metric-label" data-i18n="llm-viz">可视化</span>
                 </div>
               </div>
               <div class="metric-item">
-                <div class="metric-icon">⚡</div>
+                <div class="metric-icon">📡</div>
                 <div class="metric-info">
-                  <span class="metric-value">-40%</span>
-                  <span class="metric-label" data-i18n="llm-latency">延迟降低</span>
+                  <span class="metric-value">H.265</span>
+                  <span class="metric-label" data-i18n="llm-stream">视频流</span>
                 </div>
               </div>
             </div>
@@ -444,11 +442,12 @@ WEIGHTS = {
           <div class="tech-stack-card">
             <h3 data-i18n="card-tech-stack">技术栈</h3>
             <div class="stack-tags">
-              <span class="stack-tag">Qwen-3.8B</span>
-              <span class="stack-tag">vLLM</span>
-              <span class="stack-tag">LoRA</span>
-              <span class="stack-tag">PEFT</span>
-              <span class="stack-tag">GGUF</span>
+              <span class="stack-tag">Vue</span>
+              <span class="stack-tag">Three.js</span>
+              <span class="stack-tag">WebSocket</span>
+              <span class="stack-tag">ZLMediaKit</span>
+              <span class="stack-tag">EasyWasmPlayer</span>
+              <span class="stack-tag">MySQL</span>
             </div>
           </div>
         </div>

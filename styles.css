@@ -1567,18 +1567,32 @@ main {
   position: relative;
 }
 
-.timeline-item:nth-child(odd) {
-  direction: rtl;
-}
-
+/* 奇数项（1、3、5）：内容在左侧 */
 .timeline-item:nth-child(odd) .timeline-content {
-  text-align: right;
-  direction: ltr;
+  text-align: left;
+  grid-column: 1;
 }
 
+.timeline-item:nth-child(odd) .timeline-marker {
+  grid-column: 2;
+}
+
+.timeline-item:nth-child(odd) .timeline-placeholder {
+  grid-column: 3;
+}
+
+/* 偶数项（2、4、6）：内容在右侧 */
 .timeline-item:nth-child(even) .timeline-content {
-  text-align: left;
-  direction: ltr;
+  text-align: right;
+  grid-column: 3;
+}
+
+.timeline-item:nth-child(even) .timeline-marker {
+  grid-column: 2;
+}
+
+.timeline-item:nth-child(even) .timeline-placeholder {
+  grid-column: 1;
 }
 
 .timeline-marker {
@@ -1659,6 +1673,33 @@ main {
   font-weight: 500;
 }
 
+.timeline-details {
+  list-style: none;
+  padding: 0;
+  margin: 12px 0;
+}
+
+.timeline-details li {
+  position: relative;
+  padding-left: 20px;
+  margin-bottom: 8px;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.timeline-details li::before {
+  content: "▹";
+  position: absolute;
+  left: 0;
+  color: var(--neon-cyan);
+  font-weight: bold;
+}
+
+.timeline-item:nth-child(odd) .timeline-details li::before {
+  color: var(--neon-cyan);
+}
+
 @media (max-width: 768px) {
   .skill-timeline::before {
     left: 30px;
@@ -1669,12 +1710,21 @@ main {
     gap: 20px;
   }
 
-  .timeline-item:nth-child(odd) {
-    direction: ltr;
+  /* 移动端：所有项目在右侧，时间线在左侧 */
+  .timeline-item:nth-child(odd) .timeline-content,
+  .timeline-item:nth-child(even) .timeline-content {
+    text-align: left;
+    grid-column: 2;
   }
 
-  .timeline-item:nth-child(odd) .timeline-content {
-    text-align: left;
+  .timeline-item:nth-child(odd) .timeline-marker,
+  .timeline-item:nth-child(even) .timeline-marker {
+    grid-column: 1;
+  }
+
+  .timeline-item:nth-child(odd) .timeline-placeholder,
+  .timeline-item:nth-child(even) .timeline-placeholder {
+    display: none;
   }
 
   .timeline-marker {
