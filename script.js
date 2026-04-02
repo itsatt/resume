@@ -1582,45 +1582,81 @@ function initSkillOrb() {
   animate();
 }
 
-// ===== Pretext 交互式文本布局 =====
+// ===== Pretext 交互式文本布局 - 整个网站 =====
 let pretextApp = null;
 
 function initPretext() {
-  const canvas = document.getElementById('pretext-canvas');
-  if (!canvas) return;
+  // 等待 Pretext 库加载
+  const checkPretext = setInterval(() => {
+    if (window.Pretext && window.Pretext.prepareWithSegments) {
+      clearInterval(checkPretext);
+      setupPretextSite();
+    }
+  }, 100);
 
-  // 从 CDN 加载 Pretext
-  const script = document.createElement('script');
-  script.src = 'https://cdn.jsdelivr.net/npm/@chenglou/pretext/dist/layout.js';
-  script.type = 'module';
-
-  script.onload = () => {
-    // Pretext 加载完成后初始化
-    setTimeout(() => setupPretextCanvas(canvas), 100);
-  };
-
-  script.onerror = () => {
-    console.error('Pretext CDN 加载失败');
-    // 降级显示普通文本
-    canvas.parentElement.innerHTML = '<div style="padding:30px;color:#a0b4d8;">Pretext 加载失败，请检查网络连接</div>';
-  };
-
-  document.head.appendChild(script);
+  setTimeout(() => {
+    if (!window.Pretext) {
+      console.warn('Pretext 加载超时，降级为普通渲染');
+    }
+  }, 5000);
 }
 
-function setupPretextCanvas(canvas) {
-  // 访问 window.Pretext 或通过 module 获取
+function setupPretextSite() {
+  const { prepareWithSegments, layoutWithLines } = window.Pretext;
+
+  // 创建 Pretext Canvas 容器
+  const pretextContainer = document.createElement('div');
+  pretextContainer.className = 'pretext-site-container';
+  pretextContainer.innerHTML = `
+    <canvas id="pretext-site-canvas"></canvas>
+    <div class="pretext-mouse-indicator" id="pretext-indicator"></div>
+  `;
+  document.body.appendChild(pretextContainer);
+
+  const canvas = document.getElementById('pretext-site-canvas');
   const ctx = canvas.getContext('2d');
+  const indicator = document.getElementById('pretext-indicator');
 
-  // 示例文本
-  const texts = {
-    intro: `李涛 | AI 应用工程师
+  // 要渲染的内容
+  const siteContent = `
+李涛 | AI 应用工程师
 
-3 年 AI 工程化经验，专注于 RAG 检索增强生成、Agent 工作流和本地大模型部署。
+开放求职 · AI 应用/系统工程师
 
-从传统软件开发转型 AI 工程化，主导智能安防 Agent 系统开发，实现 RAG 检索增强、多路召回与 Qwen-38B 集成。构建智能巡检平台，集成 3D 可视化、H.265 视频流、WebSocket 实时通讯与 AI 图像识别。`,
+📧 lit82266@gmail.com  ·  📱 17835415300
+太原科技大学 · 光电信息科学与工程（2022 届）
+📍 重庆 · 💼 全职
 
-    skills: `核心技能栈
+━━━━━━━━━━━━━━━━━━━━━━━━
+
+成长时间线
+
+【2022】毕业入行 · 嵌入式与小程序开发
+• 使用 C/C++ 进行 STM32 单片机开发，实现 BLE 蓝牙通信
+• 开发微信小程序项目，负责页面布局和 API 对接
+• 掌握嵌入式系统调试、硬件通信协议（I2C/SPI/UART）
+
+【2023】转岗全栈 · OpenHarmony 应用开发
+• 开发 RTK 定位系统，实现芯片定位数据可视化
+• 负责丝杆检测系统开发，硬件控制探头运动
+• 编写 CMake 脚本实现 C++ 与 ArkTS 无缝集成
+• 通过 XTS 测试和 MDTP 应用测试，完成 MineHarmony 认证
+
+【2024】AI 转型 · RAG 系统与智能安防
+• 设计 RAG 架构，使用 FAISS/Chroma 实现双路召回
+• 集成 Qwen-38B 大模型，Prompt Engineering 告警分析
+• 开发 Vue3+Three.js 可视化界面，6 大功能模块联动
+• 实现 WebSocket 实时通讯，告警动态推送
+
+【2025】AI 深化 · Agent 工作流与巡检平台
+• 搭建智能巡检平台，多传感器数据采集
+• 集成 H.265 视频流（WebRTC/RTSP），延迟<500ms
+• 使用 Three.js 实现 3D 可视化，设备状态实时渲染
+• 接入 AI 图像识别服务，仪表读数识别
+
+━━━━━━━━━━━━━━━━━━━━━━━━
+
+核心技能
 
 【AI 工程化】
 RAG 架构设计 · FAISS/Chroma 向量检索 · BGE-M3 Embedding
@@ -1629,39 +1665,68 @@ Qwen-38B 本地部署 · LoRA/PEFT 微调 · Agent 工作流
 
 【前端开发】
 Vue3 + TypeScript · Three.js 3D 可视化 · WebSocket 实时通讯
-H.265 视频流（WebRTC/RTSP）· Canvas 渲染优化`,
+H.265 视频流（WebRTC/RTSP）· Canvas 渲染优化
 
-    project: `旗舰项目：智能安防 Agent 系统
+【全栈能力】
+OpenHarmony/ArkTS · CMake 集成 · Python · MySQL
+
+━━━━━━━━━━━━━━━━━━━━━━━━
+
+旗舰项目：智能安防 Agent 系统
 
 技术方案：
-• RAG 架构设计 - 告警日志结构化处理，Chunking 分块策略，支持 FAISS/Chroma 双向量库
-• 多路召回融合 - 相似度匹配 + 关键词匹配 + Rerank 重排序，准确率提升 47%
+• RAG 架构设计 - 告警日志结构化处理
+• 多路召回融合 - 相似度 + 关键词+Rerank，准确率提升 47%
 • Qwen-38B 集成 - Prompt Engineering 设计告警分析模板
-• Vue3 可视化 - Three.js 3D 展示 + WebSocket 实时更新`,
+• Vue3 可视化 - Three.js 3D 展示 + WebSocket 实时更新
 
-    custom: `Pretext 是一个纯 JavaScript/TypeScript 库，用于多行文本测量和布局。
+━━━━━━━━━━━━━━━━━━━━━━━━
 
-它不需要调用 getBoundingClientRect 等触发 reflow 的 API，而是使用 Canvas measureText 进行文本 shaping。
+鼠标移动查看文字排斥效果 ✨
+  `;
 
-核心优势：
-• prepare() 约 19ms - 一次性文本分析
-• layout() 约 0.09ms - 纯算术计算
-• 支持多语言、emoji、混合双向文本`
-  };
-
-  let currentText = texts.intro;
-  let containerWidth = 500;
+  let containerWidth = window.innerWidth * 0.8;
   const lineHeight = 28;
-  const fontSize = 16;
-  const padding = 30;
+  const fontSize = 15;
+  const padding = 40;
+  let mousePos = { x: -1000, y: -1000 };
+  const mouseRadius = 80;
 
   // 设置 canvas 尺寸
   function resizeCanvas() {
-    const rect = canvas.parentElement.getBoundingClientRect();
-    canvas.width = rect.width * window.devicePixelRatio;
-    canvas.height = rect.height * window.devicePixelRatio;
+    canvas.width = window.innerWidth * window.devicePixelRatio;
+    canvas.height = window.innerHeight * window.devicePixelRatio;
+    canvas.style.width = window.innerWidth + 'px';
+    canvas.style.height = window.innerHeight + 'px';
     ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
-    return { width: rect.width, height: rect.height };
+    return { width: window.innerWidth, height: window.innerHeight };
+  }
+
+  // 检查点是否在鼠标排斥范围内
+  function isInMouseRadius(textX, textY) {
+    const dx = textX - mousePos.x;
+    const dy = textY - mousePos.y;
+    return Math.sqrt(dx * dx + dy * dy) < mouseRadius;
+  }
+
+  // 计算排斥偏移
+  function getRepulsionOffset(textX, textY) {
+    const dx = textX - mousePos.x;
+    const dy = textY - mousePos.y;
+    const distance = Math.sqrt(dx * dx + dy * dy);
+
+    if (distance >= mouseRadius || distance < 1) {
+      return { x: 0, y: 0 };
+    }
+
+    // 排斥力度随距离减小而增大
+    const force = (mouseRadius - distance) / mouseRadius;
+    const angle = Math.atan2(dy, dx);
+
+    return {
+      x: Math.cos(angle) * force * mouseRadius * 0.5,
+      y: Math.sin(angle) * force * mouseRadius * 0.5
+    };
   }
 
   // 渲染文本
@@ -1669,143 +1734,104 @@ H.265 视频流（WebRTC/RTSP）· Canvas 渲染优化`,
     const { width, height } = resizeCanvas();
     ctx.clearRect(0, 0, width, height);
 
-    // 绘制背景
-    ctx.fillStyle = '#0a0e1a';
-    ctx.fillRect(0, 0, width, height);
-
-    // 绘制网格线
-    ctx.strokeStyle = 'rgba(0, 245, 212, 0.08)';
-    ctx.lineWidth = 1;
-    for (let y = padding; y < height; y += lineHeight) {
-      ctx.beginPath();
-      ctx.moveTo(padding, y);
-      ctx.lineTo(width - padding, y);
-      ctx.stroke();
-    }
-
-    // 设置字体
-    ctx.font = `${fontSize}px "JetBrains Mono", "Microsoft YaHei", sans-serif`;
-    ctx.fillStyle = '#f0f4ff';
-    ctx.textBaseline = 'top';
-
-    // 分词和测量
-    const lines = [];
-    const words = currentText.split(/(\s+)/);
-    let currentLine = '';
-    let y = padding;
-
-    for (let word of words) {
-      if (word === '\n') {
-        lines.push({ text: currentLine, width: ctx.measureText(currentLine).width });
-        currentLine = '';
-        y += lineHeight;
-        continue;
-      }
-
-      const testLine = currentLine + word;
-      const testWidth = ctx.measureText(testLine).width;
-
-      if (testWidth > containerWidth - padding * 2 && currentLine !== '') {
-        lines.push({ text: currentLine, width: ctx.measureText(currentLine).width });
-        currentLine = word;
-        y += lineHeight;
-      } else {
-        currentLine = testLine;
-      }
-    }
-
-    if (currentLine !== '') {
-      lines.push({ text: currentLine, width: ctx.measureText(currentLine).width });
-    }
-
-    // 绘制文本行
-    lines.forEach((line, i) => {
-      const x = padding;
-      const yPos = padding + i * lineHeight;
-      ctx.fillText(line.text, x, yPos);
+    // 准备文本
+    const prepared = prepareWithSegments(siteContent, `${fontSize}px "JetBrains Mono", "Microsoft YaHei", sans-serif`, {
+      whiteSpace: 'pre-wrap'
     });
 
-    // 绘制容器边界
-    ctx.strokeStyle = '#00f5d4';
-    ctx.lineWidth = 2;
-    ctx.setLineDash([5, 5]);
-    ctx.strokeRect(padding, padding, containerWidth - padding * 2, height - padding * 2);
-    ctx.setLineDash([]);
+    // 布局文本
+    const { lines } = layoutWithLines(prepared, containerWidth - padding * 2, lineHeight);
 
-    // 更新统计
-    document.getElementById('line-count').textContent = lines.length;
-    document.getElementById('text-height').textContent = Math.round(lines.length * lineHeight);
+    // 计算每行的偏移（考虑鼠标排斥）
+    let yOffset = padding;
+    const centerX = width / 2;
+
+    lines.forEach((line, i) => {
+      const baseX = centerX - line.width / 2;
+      const baseY = yOffset;
+
+      // 对每个字符应用排斥效果
+      ctx.font = `${fontSize}px "JetBrains Mono", "Microsoft YaHei", sans-serif`;
+      ctx.fillStyle = '#f0f4ff';
+      ctx.textBaseline = 'top';
+
+      for (let char of line.text) {
+        const charWidth = ctx.measureText(char).width;
+        const charX = baseX;
+        const charY = baseY;
+
+        // 计算排斥偏移
+        const offset = getRepulsionOffset(charX + charWidth / 2, charY + fontSize / 2);
+
+        ctx.fillText(char, charX + offset.x, charY + offset.y);
+        baseX += charWidth;
+      }
+
+      yOffset += lineHeight;
+    });
+
+    // 绘制鼠标指示器
+    if (mousePos.x > 0) {
+      indicator.style.left = mousePos.x + 'px';
+      indicator.style.top = mousePos.y + 'px';
+      indicator.classList.add('visible');
+    } else {
+      indicator.classList.remove('visible');
+    }
   }
 
   // FPS 计数
   let frameCount = 0;
   let lastTime = performance.now();
-  function updateFps() {
+  let fps = 60;
+
+  function animate() {
     frameCount++;
     const now = performance.now();
     if (now - lastTime >= 1000) {
-      document.getElementById('fps-counter').textContent = frameCount;
+      fps = frameCount;
       frameCount = 0;
       lastTime = now;
+      console.log('Pretext FPS:', fps);
     }
-    requestAnimationFrame(updateFps);
+
+    render();
+    requestAnimationFrame(animate);
   }
 
   // 初始化
   resizeCanvas();
-  render();
-  updateFps();
+  animate();
 
-  // 滑块控制
-  const widthSlider = document.getElementById('width-slider');
-  const widthValue = document.getElementById('width-value');
-  if (widthSlider) {
-    widthSlider.addEventListener('input', (e) => {
-      containerWidth = parseInt(e.target.value);
-      widthValue.textContent = containerWidth;
-      render();
-    });
-  }
+  // 鼠标移动
+  canvas.addEventListener('mousemove', (e) => {
+    mousePos.x = e.clientX;
+    mousePos.y = e.clientY;
+  });
 
-  // 文本选择
-  const textSelect = document.getElementById('text-select');
-  if (textSelect) {
-    textSelect.addEventListener('change', (e) => {
-      currentText = texts[e.target.value] || texts.intro;
-      render();
-    });
-  }
+  canvas.addEventListener('mouseleave', () => {
+    mousePos.x = -1000;
+    mousePos.y = -1000;
+  });
 
-  // 鼠标移动效果
-  const indicator = document.getElementById('mouse-indicator');
-  const canvasWrapper = document.querySelector('.pretext-canvas-wrapper');
-  if (canvasWrapper && indicator) {
-    canvasWrapper.addEventListener('mousemove', (e) => {
-      const rect = canvasWrapper.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
+  // 触摸支持
+  canvas.addEventListener('touchmove', (e) => {
+    e.preventDefault();
+    const touch = e.touches[0];
+    mousePos.x = touch.clientX;
+    mousePos.y = touch.clientY;
+  });
 
-      // 根据鼠标位置动态调整容器宽度
-      const newWidth = Math.max(250, Math.min(700, x));
-      containerWidth = newWidth;
-      widthSlider.value = newWidth;
-      widthValue.textContent = Math.round(newWidth);
-
-      // 更新指示器位置
-      indicator.style.left = `${x}px`;
-      indicator.style.top = `${y}px`;
-      indicator.classList.add('visible');
-
-      render();
-    });
-
-    canvasWrapper.addEventListener('mouseleave', () => {
-      indicator.classList.remove('visible');
-    });
-  }
+  canvas.addEventListener('touchend', () => {
+    mousePos.x = -1000;
+    mousePos.y = -1000;
+  });
 
   // 窗口大小变化
-  window.addEventListener('resize', render);
+  window.addEventListener('resize', () => {
+    containerWidth = window.innerWidth * 0.8;
+    resizeCanvas();
+  });
 
   pretextApp = { render, resizeCanvas };
 }
