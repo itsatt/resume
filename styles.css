@@ -1739,63 +1739,64 @@ main {
   }
 }
 
-/* ===== Pretext 交互式文本布局 - 全站 ===== */
-.pretext-site-container {
+/* ===== Pretext 文本排斥效果 ===== */
+.pretext-hint {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  z-index: 9999;
-  overflow: hidden;
-}
-
-.pretext-site-container canvas {
-  display: block;
-  width: 100%;
-  height: 100%;
-}
-
-.pretext-site-container .pretext-mouse-indicator {
-  position: absolute;
-  width: 20px;
-  height: 20px;
-  border: 2px solid var(--neon-cyan);
-  border-radius: 50%;
-  transform: translate(-50%, -50%);
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.2s;
-  box-shadow: var(--glow-cyan);
-}
-
-.pretext-site-container .pretext-mouse-indicator.visible {
-  opacity: 0.8;
-}
-
-.pretext-site-container .pretext-mouse-indicator::before {
-  content: '';
-  position: absolute;
-  top: 50%;
+  bottom: 30px;
   left: 50%;
-  transform: translate(-50%, -50%);
-  width: 40px;
-  height: 40px;
-  border: 1px solid var(--neon-cyan);
-  border-radius: 50%;
-  animation: pretext-pulse 1s ease-out infinite;
+  transform: translateX(-50%);
+  background: linear-gradient(135deg, rgba(0, 245, 212, 0.1), rgba(0, 187, 249, 0.1));
+  border: 1px solid rgba(0, 245, 212, 0.3);
+  border-radius: 20px;
+  padding: 8px 16px;
+  color: var(--neon-cyan);
+  font-size: 13px;
+  backdrop-filter: blur(10px);
+  z-index: 10000;
+  pointer-events: none;
+  animation: hint-fade 3s ease-in-out;
 }
 
-@keyframes pretext-pulse {
-  0% {
-    width: 20px;
-    height: 20px;
-    opacity: 1;
-  }
-  100% {
-    width: 80px;
-    height: 80px;
+@keyframes hint-fade {
+  0%, 100% { opacity: 0; transform: translateX(-50%) translateY(10px); }
+  50%, 80% { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+/* 字符级包装元素 */
+.pretext-char, .p-char {
+  display: inline-block !important;
+  transition: transform 0.08s ease-out;
+  will-change: transform;
+  font-weight: inherit;
+  font-size: inherit;
+  font-family: inherit;
+  line-height: inherit;
+  vertical-align: baseline;
+  color: inherit;
+}
+
+/* 渐变文字的特殊处理 - 让每个字符的渐变背景对齐形成连续渐变 */
+.gradient-char {
+  display: inline-block !important;
+  background-clip: text !important;
+  -webkit-background-clip: text !important;
+  color: transparent !important;
+}
+
+/* 名字渐变 */
+.title-line.name-line .gradient-char {
+  background: linear-gradient(135deg, var(--neon-cyan), var(--neon-blue));
+}
+
+/* 高亮渐变 */
+.title-line.highlight .gradient-char {
+  background: linear-gradient(135deg, var(--neon-cyan), var(--neon-blue), var(--neon-purple));
+}
+
+/* 章节标题渐变 */
+.section-header h2 .gradient-char {
+  background: linear-gradient(135deg, var(--text-primary), var(--text-secondary));
+}
     opacity: 0;
   }
 }

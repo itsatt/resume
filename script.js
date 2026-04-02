@@ -1582,258 +1582,178 @@ function initSkillOrb() {
   animate();
 }
 
-// ===== Pretext 交互式文本布局 - 整个网站 =====
+// ===== Pretext 文本排斥效果（直接在原页面上实现）=====
 let pretextApp = null;
+let mousePos = { x: -1000, y: -1000 };
+const mouseRadius = 80;
+const exclusionStrength = 50;
 
 function initPretext() {
-  // 等待 Pretext 库加载
-  const checkPretext = setInterval(() => {
-    if (window.Pretext && window.Pretext.prepareWithSegments) {
-      clearInterval(checkPretext);
-      setupPretextSite();
-    }
-  }, 100);
+  // 只对首页应用排斥效果
+  if (document.body.dataset.page !== 'home') return;
 
+  // 创建提示元素
+  const hint = document.createElement('div');
+  hint.className = 'pretext-hint';
+  hint.innerHTML = '✨ 移动鼠标查看文字排斥效果';
+  document.body.appendChild(hint);
+
+  // 收集所有需要应用效果的字符
+  const charWrappers = [];
+  const excludeSelectors = '.nav-dots, .theme-toggle, .lang-toggle, .glass-nav, .terminal-overlay, .scroll-progress, #canvas-container, #skill-orb-container, footer, .hero-badge, .project-tag, .timeline-tag, .stack-tag, .tag, .metric, .card-glow, .p-char';
+
+  // 渐变元素选择器（这些元素需要特殊处理以保持渐变效果）
+  const gradientSelectors = '.name-line, .highlight';
+
+  // 需要检查子元素是否有渐变的父选择器
+  const gradientParentSelectors = '.section-header h2';
+
+  // 先收集所有要处理的元素和它们的文本内容
+  const elementsToProcess = [];
+
+  // 遍历所有元素
+  document.querySelectorAll('h1, h2, h3, p, span, a, div, li, label, strong, em, b, i').forEach(el => {
+    // 跳过排除的元素
+    if (el.closest(excludeSelectors) || el.matches(excludeSelectors)) return;
+
+    // 检查是否是渐变元素
+    const isGradientElement = el.closest(gradientSelectors) || el.matches(gradientSelectors) ||
+                              el.closest(gradientParentSelectors) || el.matches(gradientParentSelectors);
+
+    // 只处理有直接文本子节点的元素
+    const textNodes = [];
+    el.childNodes.forEach(node => {
+      if (node.nodeType === Node.TEXT_NODE && node.textContent.trim()) {
+        textNodes.push(node);
+      }
+    });
+
+    if (textNodes.length > 0) {
+      elementsToProcess.push({ el, textNodes, isGradientElement });
+    }
+  });
+
+  // 处理每个元素
+  elementsToProcess.forEach(({ el, textNodes, isGradientElement }) => {
+    textNodes.forEach(textNode => {
+      const text = textNode.textContent;
+      // 使用 Array.from 正确处理 Unicode 字符（包括 emoji）
+      const chars = Array.from(text);
+
+      // 如果全是空白，跳过
+      const nonWhitespaceChars = chars.filter(c => c.trim());
+      if (nonWhitespaceChars.length === 0) return;
+
+      // 创建文档片段
+      const fragment = document.createDocumentFragment();
+
+      chars.forEach((char, index) => {
+        if (char === ' ' || char === '\n' || char === '\t') {
+          // 空白字符直接添加
+          fragment.appendChild(document.createTextNode(char));
+        } else {
+          // 非空白字符包装在 span 中
+          const charSpan = document.createElement('span');
+          charSpan.textContent = char;
+          charSpan.className = 'p-char';
+          if (isGradientElement) {
+            charSpan.classList.add('gradient-char');
+          }
+          // 关键：保持 inline 而不是 inline-block，避免破坏布局
+          charSpan.style.display = 'inline';
+          charSpan.style.position = 'relative';
+          fragment.appendChild(charSpan);
+          charWrappers.push(charSpan);
+        }
+      });
+
+      // 替换原文本节点
+      if (fragment.childNodes.length > 0) {
+        el.replaceChild(fragment, textNode);
+      }
+    });
+  });
+
+  console.log('[Pretext] 初始化完成，字符数:', charWrappers.length);
+  console.log('[Pretext] gradient-char 数量:', document.querySelectorAll('.gradient-char').length);
+
+  // 调试：检查"李涛"是否被处理
   setTimeout(() => {
-    if (!window.Pretext) {
-      console.warn('Pretext 加载超时，降级为普通渲染');
+    const titleEl = document.querySelector('.hero-title .name-line');
+    console.log('[Pretext Debug] 李涛元素:', titleEl);
+    console.log('[Pretext Debug] 李涛元素内容:', titleEl?.innerHTML);
+    console.log('[Pretext Debug] 李涛元素颜色:', window.getComputedStyle(titleEl)?.color);
+
+    const pChars = document.querySelectorAll('.p-char');
+    console.log('[Pretext Debug] p-char 总数:', pChars.length);
+
+    // 检查第一个 p-char 的样式
+    const firstChar = pChars[0];
+    if (firstChar) {
+      const style = window.getComputedStyle(firstChar);
+      console.log('[Pretext Debug] 第一个字符样式:', {
+        color: style.color,
+        display: style.display,
+        visibility: style.visibility,
+        opacity: style.opacity,
+        transform: style.transform
+      });
     }
-  }, 5000);
-}
+  }, 2000);
 
-function setupPretextSite() {
-  const { prepareWithSegments, layoutWithLines } = window.Pretext;
-
-  // 创建 Pretext Canvas 容器
-  const pretextContainer = document.createElement('div');
-  pretextContainer.className = 'pretext-site-container';
-  pretextContainer.innerHTML = `
-    <canvas id="pretext-site-canvas"></canvas>
-    <div class="pretext-mouse-indicator" id="pretext-indicator"></div>
-  `;
-  document.body.appendChild(pretextContainer);
-
-  const canvas = document.getElementById('pretext-site-canvas');
-  const ctx = canvas.getContext('2d');
-  const indicator = document.getElementById('pretext-indicator');
-
-  // 要渲染的内容
-  const siteContent = `
-李涛 | AI 应用工程师
-
-开放求职 · AI 应用/系统工程师
-
-📧 lit82266@gmail.com  ·  📱 17835415300
-太原科技大学 · 光电信息科学与工程（2022 届）
-📍 重庆 · 💼 全职
-
-━━━━━━━━━━━━━━━━━━━━━━━━
-
-成长时间线
-
-【2022】毕业入行 · 嵌入式与小程序开发
-• 使用 C/C++ 进行 STM32 单片机开发，实现 BLE 蓝牙通信
-• 开发微信小程序项目，负责页面布局和 API 对接
-• 掌握嵌入式系统调试、硬件通信协议（I2C/SPI/UART）
-
-【2023】转岗全栈 · OpenHarmony 应用开发
-• 开发 RTK 定位系统，实现芯片定位数据可视化
-• 负责丝杆检测系统开发，硬件控制探头运动
-• 编写 CMake 脚本实现 C++ 与 ArkTS 无缝集成
-• 通过 XTS 测试和 MDTP 应用测试，完成 MineHarmony 认证
-
-【2024】AI 转型 · RAG 系统与智能安防
-• 设计 RAG 架构，使用 FAISS/Chroma 实现双路召回
-• 集成 Qwen-38B 大模型，Prompt Engineering 告警分析
-• 开发 Vue3+Three.js 可视化界面，6 大功能模块联动
-• 实现 WebSocket 实时通讯，告警动态推送
-
-【2025】AI 深化 · Agent 工作流与巡检平台
-• 搭建智能巡检平台，多传感器数据采集
-• 集成 H.265 视频流（WebRTC/RTSP），延迟<500ms
-• 使用 Three.js 实现 3D 可视化，设备状态实时渲染
-• 接入 AI 图像识别服务，仪表读数识别
-
-━━━━━━━━━━━━━━━━━━━━━━━━
-
-核心技能
-
-【AI 工程化】
-RAG 架构设计 · FAISS/Chroma 向量检索 · BGE-M3 Embedding
-多路召回融合 · Rerank 重排序 · Prompt Engineering
-Qwen-38B 本地部署 · LoRA/PEFT 微调 · Agent 工作流
-
-【前端开发】
-Vue3 + TypeScript · Three.js 3D 可视化 · WebSocket 实时通讯
-H.265 视频流（WebRTC/RTSP）· Canvas 渲染优化
-
-【全栈能力】
-OpenHarmony/ArkTS · CMake 集成 · Python · MySQL
-
-━━━━━━━━━━━━━━━━━━━━━━━━
-
-旗舰项目：智能安防 Agent 系统
-
-技术方案：
-• RAG 架构设计 - 告警日志结构化处理
-• 多路召回融合 - 相似度 + 关键词+Rerank，准确率提升 47%
-• Qwen-38B 集成 - Prompt Engineering 设计告警分析模板
-• Vue3 可视化 - Three.js 3D 展示 + WebSocket 实时更新
-
-━━━━━━━━━━━━━━━━━━━━━━━━
-
-鼠标移动查看文字排斥效果 ✨
-  `;
-
-  let containerWidth = window.innerWidth * 0.8;
-  const lineHeight = 28;
-  const fontSize = 15;
-  const padding = 40;
-  let mousePos = { x: -1000, y: -1000 };
-  const mouseRadius = 80;
-
-  // 设置 canvas 尺寸
-  function resizeCanvas() {
-    canvas.width = window.innerWidth * window.devicePixelRatio;
-    canvas.height = window.innerHeight * window.devicePixelRatio;
-    canvas.style.width = window.innerWidth + 'px';
-    canvas.style.height = window.innerHeight + 'px';
-    ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
-    return { width: window.innerWidth, height: window.innerHeight };
-  }
-
-  // 检查点是否在鼠标排斥范围内
-  function isInMouseRadius(textX, textY) {
-    const dx = textX - mousePos.x;
-    const dy = textY - mousePos.y;
-    return Math.sqrt(dx * dx + dy * dy) < mouseRadius;
-  }
-
-  // 计算排斥偏移
-  function getRepulsionOffset(textX, textY) {
-    const dx = textX - mousePos.x;
-    const dy = textY - mousePos.y;
+  // 计算字符排斥偏移
+  function getRepulsionOffset(charX, charY) {
+    const dx = charX - mousePos.x;
+    const dy = charY - mousePos.y;
     const distance = Math.sqrt(dx * dx + dy * dy);
 
     if (distance >= mouseRadius || distance < 1) {
       return { x: 0, y: 0 };
     }
 
-    // 排斥力度随距离减小而增大
     const force = (mouseRadius - distance) / mouseRadius;
     const angle = Math.atan2(dy, dx);
+    const repelDistance = exclusionStrength * force;
 
     return {
-      x: Math.cos(angle) * force * mouseRadius * 0.5,
-      y: Math.sin(angle) * force * mouseRadius * 0.5
+      x: Math.cos(angle) * repelDistance,
+      y: Math.sin(angle) * repelDistance
     };
   }
 
-  // 渲染文本
-  function render() {
-    const { width, height } = resizeCanvas();
-    ctx.clearRect(0, 0, width, height);
-
-    // 准备文本
-    const prepared = prepareWithSegments(siteContent, `${fontSize}px "JetBrains Mono", "Microsoft YaHei", sans-serif`, {
-      whiteSpace: 'pre-wrap'
-    });
-
-    // 布局文本
-    const { lines } = layoutWithLines(prepared, containerWidth - padding * 2, lineHeight);
-
-    // 计算每行的偏移（考虑鼠标排斥）
-    let yOffset = padding;
-    const centerX = width / 2;
-
-    lines.forEach((line, i) => {
-      const baseX = centerX - line.width / 2;
-      const baseY = yOffset;
-
-      // 对每个字符应用排斥效果
-      ctx.font = `${fontSize}px "JetBrains Mono", "Microsoft YaHei", sans-serif`;
-      ctx.fillStyle = '#f0f4ff';
-      ctx.textBaseline = 'top';
-
-      for (let char of line.text) {
-        const charWidth = ctx.measureText(char).width;
-        const charX = baseX;
-        const charY = baseY;
-
-        // 计算排斥偏移
-        const offset = getRepulsionOffset(charX + charWidth / 2, charY + fontSize / 2);
-
-        ctx.fillText(char, charX + offset.x, charY + offset.y);
-        baseX += charWidth;
-      }
-
-      yOffset += lineHeight;
-    });
-
-    // 绘制鼠标指示器
-    if (mousePos.x > 0) {
-      indicator.style.left = mousePos.x + 'px';
-      indicator.style.top = mousePos.y + 'px';
-      indicator.classList.add('visible');
-    } else {
-      indicator.classList.remove('visible');
-    }
-  }
-
-  // FPS 计数
-  let frameCount = 0;
-  let lastTime = performance.now();
-  let fps = 60;
-
+  // 动画循环
   function animate() {
-    frameCount++;
-    const now = performance.now();
-    if (now - lastTime >= 1000) {
-      fps = frameCount;
-      frameCount = 0;
-      lastTime = now;
-      console.log('Pretext FPS:', fps);
-    }
+    charWrappers.forEach(span => {
+      const rect = span.getBoundingClientRect();
+      const charCenterX = rect.left + rect.width / 2;
+      const charCenterY = rect.top + rect.height / 2;
 
-    render();
+      const offset = getRepulsionOffset(charCenterX, charCenterY);
+
+      if (offset.x !== 0 || offset.y !== 0) {
+        span.style.transform = `translate(${offset.x}px, ${offset.y}px)`;
+      } else {
+        span.style.transform = 'translate(0, 0)';
+      }
+    });
+
     requestAnimationFrame(animate);
   }
 
-  // 初始化
-  resizeCanvas();
   animate();
 
-  // 鼠标移动
-  canvas.addEventListener('mousemove', (e) => {
+  // 全局鼠标监听
+  document.addEventListener('mousemove', (e) => {
     mousePos.x = e.clientX;
     mousePos.y = e.clientY;
   });
 
-  canvas.addEventListener('mouseleave', () => {
+  document.addEventListener('mouseleave', () => {
     mousePos.x = -1000;
     mousePos.y = -1000;
   });
 
-  // 触摸支持
-  canvas.addEventListener('touchmove', (e) => {
-    e.preventDefault();
-    const touch = e.touches[0];
-    mousePos.x = touch.clientX;
-    mousePos.y = touch.clientY;
-  });
-
-  canvas.addEventListener('touchend', () => {
-    mousePos.x = -1000;
-    mousePos.y = -1000;
-  });
-
-  // 窗口大小变化
-  window.addEventListener('resize', () => {
-    containerWidth = window.innerWidth * 0.8;
-    resizeCanvas();
-  });
-
-  pretextApp = { render, resizeCanvas };
+  pretextApp = { animate };
 }
 
 // ===== 页面加载完成 =====
