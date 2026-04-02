@@ -1410,7 +1410,8 @@ function updateTranslations(lang) {
   document.querySelectorAll('[data-i18n]').forEach(el => {
     const key = el.getAttribute('data-i18n');
     if (t[key]) {
-      el.textContent = t[key];
+      // 使用 innerHTML 以支持 HTML 标签
+      el.innerHTML = t[key];
     }
   });
 
